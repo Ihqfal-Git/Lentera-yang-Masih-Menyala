@@ -1,0 +1,112 @@
+:root {
+  /* =========================================================
+     Color Palette — Cinematic Dusk, Twilight & Night Moods
+     ========================================================= */
+  
+  /* Neutral / Base Canvas */
+  --bg-deep-night: #080c16;
+  --bg-twilight: #0f1629;
+  --bg-dusk-purple: #1d1427;
+  --bg-sunset-rich: #2e182d;
+  
+  /* Atmosphere & Gradient Stops */
+  --sky-sunset-top: #1b1226;
+  --sky-sunset-mid: #5b2847;
+  --sky-sunset-glow: #b95d52;
+  --sky-sunset-base: #f0a379;
+
+  --sky-night-top: #060912;
+  --sky-night-mid: #0f1a30;
+  --sky-night-glow: #1d335c;
+  --sky-night-base: #334d7d;
+
+  --sky-desaturated-top: #0e1013;
+  --sky-desaturated-mid: #1c2027;
+  --sky-desaturated-base: #383e4a;
+
+  /* Typography & Foreground */
+  --text-primary: #fbf6f0;
+  --text-secondary: rgba(251, 246, 240, 0.72);
+  --text-muted: rgba(251, 246, 240, 0.44);
+  --text-whisper: rgba(251, 246, 240, 0.28);
+
+  /* Accents */
+  --accent-gold: #f2cb86;
+  --accent-gold-soft: rgba(242, 203, 134, 0.22);
+  --accent-peach: #f7a988;
+  --accent-rose: #d67b8d;
+  --accent-blue-mist: #a7c5eb;
+  --accent-violet: #a38cf0;
+
+  /* Glassmorphism & UI Surfaces */
+  --surface-glass-light: rgba(255, 255, 255, 0.05);
+  --surface-glass-medium: rgba(255, 255, 255, 0.08);
+  --surface-glass-border: rgba(255, 255, 255, 0.12);
+  --surface-glass-glow: rgba(242, 203, 134, 0.15);
+  --surface-blur: 16px;
+
+  /* =========================================================
+     Typography Tokens
+     ========================================================= */
+  --font-serif: 'Cormorant Garamond', Garamond, 'Times New Roman', serif;
+  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  /* Type Scale */
+  --text-xs: clamp(0.75rem, 0.7rem + 0.25vw, 0.8125rem);
+  --text-sm: clamp(0.875rem, 0.82rem + 0.3vw, 0.9375rem);
+  --text-base: clamp(1rem, 0.95rem + 0.35vw, 1.125rem);
+  --text-lg: clamp(1.1875rem, 1.1rem + 0.5vw, 1.35rem);
+  --text-xl: clamp(1.4rem, 1.25rem + 0.8vw, 1.75rem);
+  --text-2xl: clamp(1.8rem, 1.55rem + 1.2vw, 2.35rem);
+  --text-3xl: clamp(2.25rem, 1.9rem + 1.8vw, 3.25rem);
+
+  /* Leading & Tracking */
+  --leading-tight: 1.2;
+  --leading-snug: 1.4;
+  --leading-relaxed: 1.75;
+  --leading-loose: 2;
+
+  --tracking-tight: -0.02em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.08em;
+  --tracking-widest: 0.2em;
+
+  /* =========================================================
+     Cinematic Motion & Timing Curves
+     ========================================================= */
+  --ease-cinematic: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-float: ease-in-out;
+
+  --duration-instant: 150ms;
+  --duration-quick: 300ms;
+  --duration-smooth: 600ms;
+  --duration-slow: 1200ms;
+  --duration-cinematic: 2000ms;
+
+  /* =========================================================
+     Layout, Spacing & Safe Areas
+     ========================================================= */
+  --space-xs: 0.5rem;
+  --space-sm: 0.875rem;
+  --space-md: 1.5rem;
+  --space-lg: 2.25rem;
+  --space-xl: 3.5rem;
+  --space-2xl: 5rem;
+
+  --safe-area-top: env(safe-area-inset-top, 0px);
+  --safe-area-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-area-left: env(safe-area-inset-left, 0px);
+  --safe-area-right: env(safe-area-inset-right, 0px);
+
+  /* Component Dimensions */
+  --content-max-width: 720px;
+  --touch-target-min: 44px;
+}
+
+@media (max-width: 768px) {
+  :root {
+    --surface-blur: 6px;
+  }
+}

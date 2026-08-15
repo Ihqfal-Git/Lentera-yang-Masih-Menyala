@@ -1,0 +1,132 @@
+/* =========================================================
+   Atmosphere & Ambient Layer Transitions
+   ========================================================= */
+
+.ambient-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* Sky Gradient with Smooth Transitions between Moods */
+.sky-gradient {
+  z-index: 1;
+  background: radial-gradient(circle at 50% 80%, var(--sky-sunset-base) 0%, var(--sky-sunset-glow) 35%, var(--sky-sunset-mid) 70%, var(--sky-sunset-top) 100%);
+  transition: background var(--duration-cinematic) var(--ease-cinematic);
+  will-change: background;
+}
+
+/* Mood modifier classes for sky */
+.sky-gradient.mood-sunset {
+  background: radial-gradient(circle at 50% 85%, var(--sky-sunset-base) 0%, var(--sky-sunset-glow) 30%, var(--sky-sunset-mid) 65%, var(--sky-sunset-top) 100%);
+}
+
+.sky-gradient.mood-night {
+  background: radial-gradient(circle at 50% 20%, var(--sky-night-glow) 0%, var(--sky-night-mid) 50%, var(--sky-night-top) 100%);
+}
+
+.sky-gradient.mood-desaturated {
+  background: radial-gradient(circle at 50% 50%, var(--sky-desaturated-base) 0%, var(--sky-desaturated-mid) 50%, var(--sky-desaturated-top) 100%);
+}
+
+/* Stars & Dust Canvas / Background */
+.stars-layer {
+  z-index: 2;
+  opacity: 0.55;
+  background-image: 
+    radial-gradient(1.5px 1.5px at 25px 35px, #ffffff, rgba(0,0,0,0)),
+    radial-gradient(1px 1px at 45px 75px, #ffffff, rgba(0,0,0,0)),
+    radial-gradient(1.5px 1.5px at 95px 45px, #f2cb86, rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 165px 125px, #ffffff, rgba(0,0,0,0)),
+    radial-gradient(1px 1px at 235px 195px, #f7a988, rgba(0,0,0,0)),
+    radial-gradient(1.5px 1.5px at 315px 85px, #ffffff, rgba(0,0,0,0));
+  background-repeat: repeat;
+  background-size: 360px 360px;
+  animation: starTwinkle 12s infinite alternate ease-in-out;
+}
+
+@keyframes starTwinkle {
+  0% { opacity: 0.4; }
+  50% { opacity: 0.65; }
+  100% { opacity: 0.48; }
+}
+
+/* Floating Ambient Dust & Light Particles */
+.ambient-dust-layer {
+  z-index: 3;
+  opacity: 0.4;
+  background-image:
+    radial-gradient(1.5px 1.5px at 50px 100px, rgba(242, 203, 134, 0.8), transparent),
+    radial-gradient(2px 2px at 180px 220px, rgba(247, 169, 136, 0.6), transparent),
+    radial-gradient(1px 1px at 290px 70px, rgba(255, 255, 255, 0.7), transparent),
+    radial-gradient(2px 2px at 380px 280px, rgba(242, 203, 134, 0.5), transparent);
+  background-repeat: repeat;
+  background-size: 420px 420px;
+  animation: dustDrift 36s linear infinite;
+}
+
+@keyframes dustDrift {
+  0% { transform: translateY(0) translateX(0); }
+  50% { transform: translateY(-30px) translateX(15px); }
+  100% { transform: translateY(-60px) translateX(0); }
+}
+
+/* Gentle, Slow Drifting Fog */
+.fog-layer {
+  z-index: 4;
+  opacity: 0.28;
+  background: radial-gradient(ellipse at 50% 100%, rgba(240, 163, 121, 0.22) 0%, rgba(91, 40, 71, 0.12) 50%, transparent 80%);
+  filter: blur(28px);
+  animation: fogDrift 28s ease-in-out infinite alternate;
+  will-change: transform, opacity;
+}
+
+@keyframes fogDrift {
+  0% { transform: translateY(0) scale(1); opacity: 0.22; }
+  50% { transform: translateY(-16px) scale(1.04); opacity: 0.32; }
+  100% { transform: translateY(-32px) scale(1.08); opacity: 0.26; }
+}
+
+/* Cinematic Warm Light Leak */
+.light-leak {
+  z-index: 5;
+  opacity: 0.25;
+  background: radial-gradient(circle at 12% 18%, rgba(242, 203, 134, 0.35) 0%, transparent 60%);
+  mix-blend-mode: screen;
+}
+
+/* Subtle Vignette for Intimate Cinematic Depth */
+.vignette-overlay {
+  z-index: 6;
+  background: radial-gradient(circle at center, transparent 45%, rgba(5, 7, 12, 0.7) 100%);
+  mix-blend-mode: multiply;
+}
+
+/* Film Grain Texture */
+.film-grain {
+  z-index: 7;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+/* Transition Curtain Overlay (for Dissolves & Scene Switches) */
+.transition-curtain {
+  position: absolute;
+  inset: 0;
+  background-color: var(--bg-deep-night);
+  z-index: 99;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Accessibility: Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  .stars-layer,
+  .ambient-dust-layer,
+  .fog-layer {
+    animation: none !important;
+  }
+}
+

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>Lentera yang Masih Menyala</title>
+  <meta name="description" content="Sebuah ruang hening dan interaktif untuk membuka kembali percakapan di antara jeda." />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 4 C18 9 23 14 28 16 C23 18 18 23 16 28 C14 23 9 18 4 16 C9 14 14 9 16 4 Z' fill='%23f2cb86'/%3E%3C/svg%3E" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="/src/styles/main.css" />
+</head>
+<body>
+  <div id="app" class="experience-container">
+    <!-- Atmospheric Ambient Background Layers -->
+    <div class="ambient-layer sky-gradient" id="ambientSky"></div>
+    <div class="ambient-layer stars-layer" id="ambientStars"></div>
+    <div class="ambient-layer ambient-dust-layer" id="ambientDust"></div>
+    <div class="ambient-layer fog-layer" id="ambientFog"></div>
+    <div class="ambient-layer light-leak" id="ambientLightLeak"></div>
+    <div class="ambient-layer vignette-overlay"></div>
+    <div class="ambient-layer film-grain"></div>
+
+    <!-- Audio HUD Indicator (Compact Circular by default, Expandable on Hover/Track Change) -->
+    <aside class="audio-hud" id="audioHud" aria-label="Pengaturan Audio" hidden>
+      <button class="audio-toggle-btn" id="audioToggleBtn" title="Bisukan / Nyalakan Audio" aria-label="Bisukan atau nyalakan musik latar">
+        <svg class="audio-icon audio-icon-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor" fill-opacity="0.12"></polygon>
+          <path class="audio-wave audio-wave-1" d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+          <path class="audio-wave audio-wave-2" d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+        </svg>
+        <svg class="audio-icon audio-icon-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+          <line x1="23" y1="9" x2="17" y2="15"></line>
+          <line x1="17" y1="9" x2="23" y2="15"></line>
+        </svg>
+      </button>
+      <span class="audio-track-title" id="audioTrackTitle">Suara Temaram</span>
+    </aside>
+
+    <!-- Main Stage for Active Scene -->
+    <main class="scene-stage" id="sceneStage" aria-live="polite"></main>
+
+    <!-- Global Floating Elements Container (e.g., Butterfly across transitions) -->
+    <div class="global-actor-layer" id="globalActors"></div>
+
+    <!-- Global Transition Curtain -->
+    <div class="transition-curtain" id="transitionCurtain"></div>
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
