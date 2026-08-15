@@ -36,7 +36,7 @@ export const STORY_CONTENT = {
       },
       {
         imageSrc: '/assets/memories/photo-02.webp',
-        caption: 'Barangkali kau tidak pernah menyadarinya, tetapi beberapa hal kecil tentangmu masih tinggal begitu lama dalam ingatanku.',
+        caption: 'Barangkali kamu tidak pernah menyadarinya, tetapi beberapa hal kecil tentangmu masih tinggal begitu lama dalam ingatanku.',
         captionSecondary: null,
       },
       {
@@ -73,7 +73,7 @@ export const STORY_CONTENT = {
     // Monolog pembuka sebelum membuka amplop
     monologueLine1: 'Malam kian larut, dan aksara yang lama tersimpan akhirnya menemukan muara.',
     monologueLine2: 'Tak ada kemarahan di sini, hanya kejujuran yang ingin menemukan suara.',
-    monologueLine3: 'Jika kau berkenan, biarkan surat ini menyampaikan apa yang tak sempat terucap.',
+    monologueLine3: 'Jika kamu berkenan, biarkan surat ini menyampaikan apa yang tak sempat terucap.',
 
     // Surat utama
     letter: {
@@ -86,26 +86,26 @@ export const STORY_CONTENT = {
         'Aku tidak menulis ini untuk mencari siapa yang benar. Aku juga tidak ingin menjadikan surat ini sebagai tempat untuk menghitung siapa yang paling banyak terluka, siapa yang paling banyak berusaha, atau siapa yang seharusnya meminta maaf lebih dahulu.',
         'Mungkin ada bagian yang salah dariku. Mungkin ada bagian yang salah darimu. Dan mungkin ada begitu banyak hal yang sebenarnya tidak pernah benar-benar salah, hanya tidak pernah sempat kita bicarakan dengan cara yang semestinya.',
         'Aku hanya tahu satu hal. Aku masih ingin memahami. Bukan hanya ingin dipahami.',
-        'Aku ingin mendengar apa yang selama ini mungkin terlalu sulit untuk kauucapkan. Aku ingin tahu apa yang kau rasakan ketika percakapan kita mulai kehilangan arah. Apa yang membuatmu lelah. Apa yang membuatmu memilih diam. Dan apa yang sebenarnya masih ingin kaukatakan, jika suatu hari nanti kita memiliki keberanian untuk duduk dan berbicara tanpa saling mempertahankan diri.',
+        'Aku ingin mendengar apa yang selama ini mungkin terlalu sulit untuk kamu ucapkan. Aku ingin tahu apa yang kamu rasakan ketika percakapan kita mulai kehilangan arah. Apa yang membuatmu lelah. Apa yang membuatmu memilih diam. Dan apa yang sebenarnya masih ingin kamu katakan, jika suatu hari nanti kita memiliki keberanian untuk duduk dan berbicara tanpa saling mempertahankan diri.',
         'Aku pun memiliki banyak hal yang ingin kuceritakan. Tentang apa yang kurasakan. Tentang hal-hal yang selama ini gagal kusampaikan dengan baik. Tentang bagaimana aku memandang hubungan ini setelah semua jeda yang kita lalui.',
         'Namun kali ini aku tidak ingin memaksakan semua jawabannya hadir sekaligus. Karena mungkin beberapa hal memang membutuhkan waktu. Dan mungkin, untuk sementara, yang kita perlukan bukanlah sebuah keputusan. Melainkan sebuah ruang untuk saling mendengar.',
         'Jika masih ada satu percakapan yang bersedia kita buka kembali, aku ingin memulainya tanpa membawa siapa pun sebagai pemenang dan siapa pun sebagai pihak yang kalah. Hanya kita. Dua orang yang pernah memilih untuk berjalan bersama, dan kini sedang mencoba memahami ke mana langkah ini seharusnya dibawa.',
         'Aku tidak tahu apa yang akan menunggu kita di ujung percakapan itu. Tetapi setidaknya kali ini, aku ingin kita sampai di sana dengan kata-kata yang jujur. Bukan dengan diam. Bukan dengan asumsi. Bukan dengan hal-hal yang tidak pernah sempat kita katakan.',
-        'Terima kasih sudah sampai sejauh ini. Jika suatu saat nanti kau bersedia, aku masih ingin mendengar kata-kata yang tersimpan di dalam hatimu.<br><br>Apa pun yang kau pilih, biarlah itu menjadi keputusan yang benar-benar datang darimu, sebagai langkah yang ingin kaujalani.',
+        'Terima kasih sudah sampai sejauh ini. Jika suatu saat nanti kamu bersedia, aku masih ingin mendengar kata-kata yang tersimpan di dalam hatimu.<br><br>Apa pun yang kamu pilih, biarlah itu menjadi keputusan yang benar-benar datang darimu, sebagai langkah yang ingin kamu jalani.',
       ],
       signature: '— Dia',
     },
 
     // Refleksi penutup setelah membaca surat (menuju Fase 5)
     reflectionLine1: 'Aku tak berharap jawaban yang lahir dari keresahan.',
-    reflectionLine2: 'Aku hanya ingin pilihanmu lahir dari apa yang benar-benar kau rasakan.',
+    reflectionLine2: 'Aku hanya ingin pilihanmu lahir dari apa yang benar-benar kamu rasakan.',
   },
 
   // FASE 5: THE CHOICE & ENDINGS (Keputusan Berada di Tanganmu)
   phase5: {
     meta: 'Fase 5: Jawaban & Pilihan',
     // Monolog pembuka Fase 5 (Fokus ke arah keputusan pembaca)
-    openingThought1: 'Tidak semua jawaban harus terburu-buru kau temukan.',
+    openingThought1: 'Tidak semua jawaban harus terburu-buru kamu temukan.',
     openingThought2: 'Kini saatnya, biarkan hatimu yang menentukan arah tujuan.',
     promptQuestion: 'Ke mana hatimu ingin melangkah setelah ini?',
 
@@ -116,8 +116,8 @@ export const STORY_CONTENT = {
         title: 'Bicara Kembali',
         description: 'Membuka ruang untuk saling mendengar dan bertutur kata.',
         confirmBadge: 'Bicara Kembali',
-        confirmQuestion: 'Apakah kau yakin dengan pilihan ini?',
-        confirmExplanation: 'Langkah ini berarti kau memilih untuk membuka kembali ruang percakapan, bersedia mendengar dan berbagi rasa tanpa ada yang merasa diadili.',
+        confirmQuestion: 'Apakah kamu yakin dengan pilihan ini?',
+        confirmExplanation: 'Langkah ini berarti kamu memilih untuk membuka kembali ruang percakapan, bersedia mendengar dan berbagi rasa tanpa ada yang merasa diadili.',
         vibeTitle: 'Cahaya Fajar & Percakapan Baru',
         songTrackName: "Maliq & D'Essentials — Senja Teduh Pelita",
         // LRC Synced Lyrics untuk Ending 1
@@ -195,7 +195,7 @@ export const STORY_CONTENT = {
           },
           {
             line1: 'Barangkali masih ada cerita yang belum selesai kita bicarakan,',
-            line2: 'Jika kau bersedia, mari kita kembali saling mengusahakan.',
+            line2: 'Jika kamu bersedia, mari kita kembali saling mengusahakan.',
           },
         ],
       },
@@ -204,8 +204,8 @@ export const STORY_CONTENT = {
         title: 'Beri Waktu',
         description: 'Mengambil jeda dan ruang untuk menata rasa.',
         confirmBadge: 'Beri Waktu',
-        confirmQuestion: 'Apakah kau yakin dengan pilihan ini?',
-        confirmExplanation: 'Langkah ini berarti kau memilih untuk memberi waktu bagi diri sendiri, tanpa terburu-buru hingga hatimu benar-benar menemukan ketenangan.',
+        confirmQuestion: 'Apakah kamu yakin dengan pilihan ini?',
+        confirmExplanation: 'Langkah ini berarti kamu memilih untuk memberi waktu bagi diri sendiri, tanpa terburu-buru hingga hatimu benar-benar menemukan ketenangan.',
         vibeTitle: 'Temaram Rembulan & Ruang Hening',
         songTrackName: 'Nadin Amizah — Bunga Tidur',
         // LRC Synced Lyrics untuk Ending 2
@@ -261,8 +261,8 @@ export const STORY_CONTENT = {
         title: 'Lepaskan',
         description: 'Menerima akhir perjalanan dengan penuh keikhlasan.',
         confirmBadge: 'Lepaskan',
-        confirmQuestion: 'Apakah kau yakin dengan pilihan ini?',
-        confirmExplanation: 'Langkah ini berarti kau memilih untuk merelakan akhir dari perjalanan ini, melangkah pergi dengan damai dan rasa terima kasih atas setiap kenangan yang pernah ada.',
+        confirmQuestion: 'Apakah kamu yakin dengan pilihan ini?',
+        confirmExplanation: 'Langkah ini berarti kamu memilih untuk merelakan akhir dari perjalanan ini, melangkah pergi dengan damai dan rasa terima kasih atas setiap kenangan yang pernah ada.',
         vibeTitle: 'Senja Tenang & Keikhlasan',
         songTrackName: 'Lovarian — Perpisahan Termanis',
         // LRC Synced Lyrics untuk Ending 3
@@ -323,7 +323,7 @@ export const STORY_CONTENT = {
           },
           {
             line1: 'Kulepaskan genggaman dengan ikhlas yang utuh...',
-            line2: 'Semoga bahagiamu tetap tumbuh, di mana pun kau berlabuh.',
+            line2: 'Semoga bahagiamu tetap tumbuh, di mana pun kamu berlabuh.',
             duration: 4200,
           },
           {
