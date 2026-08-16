@@ -30,23 +30,131 @@ export const STORY_CONTENT = {
     meta: 'Fase 2: Mengenangmu',
     monologueLine1: 'Barangkali, ada kepingan tentangmu yang abadi dalam ingatan,',
     monologueLine2: 'Meski waktu telah membawa langkah kita pada perhentian.',
+    
+    // 5 Kartu Fokus Utama (Hero Cards Deck)
     memories: [
       {
-        imageSrc: '/assets/memories/photo-01.webp',
-        caption: 'Entah mengapa, ada sesuatu dalam senyummu yang selalu berhasil membuat hari terasa sedikit lebih teduh.',
+        id: 1,
+        title: 'Senyuman Manismu',
+        imageSrc: '/assets/memories/mem-01.jpg',
+        caption: 'Entah mengapa, ada sesuatu dalam senyuman manismu yang selalu berhasil menghadirkan rasa nyaman yang sulit kujelaskan.',
         captionSecondary: null,
       },
       {
-        imageSrc: '/assets/memories/photo-02.webp',
-        caption: 'Barangkali kamu tidak pernah menyadarinya, tetapi beberapa hal kecil tentangmu masih tinggal begitu lama dalam ingatanku.',
+        id: 2,
+        title: 'Saat Ujian Akhir SMK',
+        imageSrc: '/assets/memories/mem-02.jpg',
+        caption: 'Foto favoritku. Di balik lelahnya masa ujian akhir SMK saat itu, ada perjuangan dan ketulusanmu yang diam-diam selalu kudoakan.',
         captionSecondary: null,
       },
       {
-        imageSrc: '/assets/memories/photo-03.webp',
-        caption: 'Kupikir waktu akan merapikan riak menjadi tenang,',
-        captionSecondary: 'Nyatanya, bayangmu justru kian benderang saat jarak membentang.',
+        id: 3,
+        title: 'Kacamata Lucumu',
+        imageSrc: '/assets/memories/mem-03.jpg',
+        caption: 'Kacamata lucumu dan caramu melihat dunia selalu punya tempat tersendiri yang tak pernah pudar dalam ingatanku.',
+        captionSecondary: null,
+      },
+      {
+        id: 4,
+        title: 'Lagi Bikin Bunga Pake Pita',
+        imageSrc: '/assets/memories/mem-04.jpg',
+        caption: 'Melihat jemarimu telaten merangkai pita menjadi bunga, aku selalu kagum pada caramu menciptakan keindahan dari hal-hal sederhana.',
+        captionSecondary: null,
+      },
+      {
+        id: 5,
+        title: 'Foto Terakhir Sebelum Break',
+        imageSrc: '/assets/memories/mem-05.jpg',
+        caption: 'Potret terakhir sebelum langkah kita mengambil jeda. Kupikir waktu akan meredakan segalanya, nyatanya bayangmu justru kian benderang saat jarak membentang.',
+        captionSecondary: null,
       },
     ],
+
+    // Monolog Transisi setelah 5 kartu fokus selesai
+    transitionMonologueLine1: 'Dan sebenarnya... tidak hanya lima kepingan itu.',
+    transitionMonologueLine2: 'Masih ada begitu banyak jejak kecil tentangmu yang tersimpan rapi...',
+
+    // Dinding Mozaik Seluruh 12 Foto Kenangan
+    mosaic: {
+      title: 'Galeri Fragmen Ingatan',
+      prompt: 'Sentuh foto untuk melihat kembali kepingan kenangan',
+      ctaButton: 'Lanjutkan Perjalanan',
+      photos: [
+        {
+          id: 1,
+          title: 'Senyuman Manismu',
+          imageSrc: '/assets/memories/mem-01.jpg',
+          caption: 'Entah mengapa, ada sesuatu dalam senyuman manismu yang selalu berhasil menghadirkan rasa nyaman yang sulit kujelaskan.',
+        },
+        {
+          id: 2,
+          title: 'Saat Ujian Akhir SMK',
+          imageSrc: '/assets/memories/mem-02.jpg',
+          caption: 'Foto favoritku. Di balik lelahnya masa ujian akhir SMK saat itu, ada perjuangan dan ketulusanmu yang diam-diam selalu kudoakan.',
+        },
+        {
+          id: 3,
+          title: 'Kacamata Lucumu',
+          imageSrc: '/assets/memories/mem-03.jpg',
+          caption: 'Kacamata lucumu dan caramu melihat dunia selalu punya tempat tersendiri yang tak pernah pudar dalam ingatanku.',
+        },
+        {
+          id: 4,
+          title: 'Lagi Bikin Bunga Pake Pita',
+          imageSrc: '/assets/memories/mem-04.jpg',
+          caption: 'Melihat jemarimu telaten merangkai pita menjadi bunga, aku selalu kagum pada caramu menciptakan keindahan dari hal-hal sederhana.',
+        },
+        {
+          id: 5,
+          title: 'Foto Terakhir Sebelum Break',
+          imageSrc: '/assets/memories/mem-05.jpg',
+          caption: 'Potret terakhir sebelum langkah kita mengambil jeda. Kupikir waktu akan meredakan segalanya, nyatanya bayangmu justru kian benderang saat jarak membentang.',
+        },
+        {
+          id: 6,
+          title: 'Tatapanmu',
+          imageSrc: '/assets/memories/mem-06.jpg',
+          caption: 'Ada kejujuran yang dalam di balik tatapanmu, sesuatu yang selalu membuatku merasa tenang.',
+        },
+        {
+          id: 7,
+          title: 'Ekspresi Mata Sayu',
+          imageSrc: '/assets/memories/mem-07.jpg',
+          caption: 'Bahkan di saat matamu sayu menahan lelah, kamu tetap sosok yang paling ingin kujaga.',
+        },
+        {
+          id: 8,
+          title: 'Imut dan Lucu',
+          imageSrc: '/assets/memories/mem-08.jpg',
+          caption: 'Tingkah dan ekspresimu yang lucu selalu punya cara ajaib untuk menghapus rasa sepi.',
+        },
+        {
+          id: 9,
+          title: 'Warna Outfit Favorit',
+          imageSrc: '/assets/memories/mem-09.jpg',
+          caption: 'Warna outfit yang selalu pas dengan kepribadianmu yang cerah dan apa adanya.',
+        },
+        {
+          id: 10,
+          title: 'Pamer Rambut Dicat',
+          imageSrc: '/assets/memories/mem-10.jpg',
+          caption: 'Caramu dengan bangga memamerkan warna rambut barumu hari itu, selalu membuatku tersenyum mengingatnya.',
+        },
+        {
+          id: 11,
+          title: 'Filter Favoritmu',
+          imageSrc: '/assets/memories/mem-11.jpg',
+          caption: 'Filter sederhana yang sering kamu pakai, selalu berhasil menangkap sisi manismu yang alami.',
+        },
+        {
+          id: 12,
+          title: 'Acara Perpisahan SMK',
+          imageSrc: '/assets/memories/mem-12.jpg',
+          caption: 'Hari perpisahan SMK itu, kamu tampil begitu anggun dan berbeda dari hari-hari biasa.',
+        },
+      ],
+    },
+
     interactivePrompt: 'Namun ingatan tak hanya hadir saat kita mencari,',
     flowerAriaLabel: 'Sentuh bunga kenangan',
     closingText: 'Yang mekar di kala sunyi kembali menghampiri, dan dari dalamnya lahir sesuatu yang tak pernah benar-benar pergi.',

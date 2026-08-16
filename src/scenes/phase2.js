@@ -5,21 +5,25 @@ import { Butterfly } from '../components/Butterfly.js';
 import { STORY_CONTENT } from '../data/storyContent.js';
 import { Typewriter } from '../utils/typewriter.js';
 import { MemoryGallery } from './phase2/MemoryGallery.js';
+import { MosaicWall } from './phase2/MosaicWall.js';
 import { BloomingFlower } from './phase2/BloomingFlower.js';
 
 /**
  * Phase 2 — Memories ("Mengenangmu")
  * Orchestrates:
  * 1. Opening monologue typewriter sequence
- * 2. Polaroid memory cards gallery (MemoryGallery)
- * 3. Interactive botanical blooming flower (BloomingFlower)
- * 4. Butterfly guide emergence & flight -> Transition to Phase 3
+ * 2. 5 Hero Polaroid memory cards with water ripple clarify (MemoryGallery)
+ * 3. Transition monologue: "Dan sebenarnya... masih ada begitu banyak kepingan..."
+ * 4. Mosaic Wall (MosaicWall) displaying all 12 photos simultaneously in an interactive collage
+ * 5. Interactive botanical blooming flower (BloomingFlower)
+ * 6. Butterfly guide emergence & flight -> Transition to Phase 3
  */
 export class Phase2Scene {
   constructor() {
     this.element = null;
     this.stage = null;
     this.gallery = null;
+    this.mosaicWall = null;
     this.flower = null;
     this.butterfly = null;
     this.activeTimelines = [];
@@ -55,8 +59,21 @@ export class Phase2Scene {
         <button class="memory-nav-zone zone-right is-disabled is-locked" id="p2-nav-next" aria-label="Kartu Selanjutnya" tabindex="0"></button>
       </div>
 
+      <!-- 2c. Intermediate Transition Monologue -->
+      <div class="phase2-transition-monologue" id="p2-trans-monologue" style="position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: var(--space-md); text-align: center; z-index: 22; pointer-events: none; opacity: 0; visibility: hidden;">
+        <p class="text-lyric p2-trans-line" id="p2-trans-1" style="font-size: var(--text-lg); opacity: 0; max-width: 500px;">
+          "${content.transitionMonologueLine1}"
+        </p>
+        <p class="text-lyric p2-trans-line" id="p2-trans-2" style="font-size: var(--text-lg); margin-top: var(--space-md); opacity: 0; max-width: 500px;">
+          "${content.transitionMonologueLine2}"
+        </p>
+      </div>
+
+      <!-- 2d. Mosaic Wall Container (holds all 12 photos simultaneously) -->
+      <div class="phase2-mosaic-stage" id="p2-mosaic-stage" style="position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 25; opacity: 0; visibility: hidden;"></div>
+
       <!-- 3. Interactive Environment & Blooming Flower -->
-      <div class="interactive-environment" id="p2-interactive" style="position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: var(--space-md); text-align: center; visibility: hidden; opacity: 0; pointer-events: none;">
+      <div class="interactive-environment" id="p2-interactive" style="position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: var(--space-md); text-align: center; visibility: hidden; opacity: 0; pointer-events: none; z-index: 20;">
         <p class="text-lyric" id="p2-interactive-prompt" style="font-size: var(--text-base); max-width: 440px; opacity: 0;">
           "${content.interactivePrompt}"
         </p>
@@ -167,9 +184,15 @@ export class Phase2Scene {
     this.gallery = new MemoryGallery({
       container: this.element.querySelector('#p2-memories-stage'),
       navContainer: this.element.querySelector('#p2-nav-layer'),
-      onFinish: () => this.revealInteractiveEnvironment(),
+      onFinish: () => this.onHeroCardsFinished(),
     });
     this.gallery.mount();
+
+    this.mosaicWall = new MosaicWall({
+      container: this.element.querySelector('#p2-mosaic-stage'),
+      onFinish: () => this.revealInteractiveEnvironment(),
+    });
+    this.mosaicWall.mount();
 
     this.flower = new BloomingFlower({
       container: this.element.querySelector('#p2-interactive'),
@@ -199,6 +222,17 @@ export class Phase2Scene {
     }
 
     // Reset sub-stages
+    const transMonologue = this.element.querySelector('#p2-trans-monologue');
+    if (transMonologue) {
+      transMonologue.style.visibility = 'hidden';
+      transMonologue.style.opacity = '0';
+    }
+    const mosaicStage = this.element.querySelector('#p2-mosaic-stage');
+    if (mosaicStage) {
+      mosaicStage.style.visibility = 'hidden';
+      mosaicStage.style.opacity = '0';
+      mosaicStage.style.pointerEvents = 'none';
+    }
     const interactiveSection = this.element.querySelector('#p2-interactive');
     if (interactiveSection) {
       interactiveSection.style.visibility = 'hidden';
@@ -219,9 +253,18 @@ export class Phase2Scene {
     this.gallery = new MemoryGallery({
       container: this.element.querySelector('#p2-memories-stage'),
       navContainer: this.element.querySelector('#p2-nav-layer'),
-      onFinish: () => this.revealInteractiveEnvironment(),
+      onFinish: () => this.onHeroCardsFinished(),
     });
     this.gallery.mount();
+
+    if (this.mosaicWall) {
+      this.mosaicWall.destroy();
+    }
+    this.mosaicWall = new MosaicWall({
+      container: this.element.querySelector('#p2-mosaic-stage'),
+      onFinish: () => this.revealInteractiveEnvironment(),
+    });
+    this.mosaicWall.mount();
 
     if (this.flower) {
       this.flower.destroy();
@@ -247,9 +290,42 @@ export class Phase2Scene {
       3200
     );
 
-    // 2. Reveal First Memory Card
+    // 2. Reveal First Memory Card (from 5 hero cards)
     if (this.gallery) {
       await this.gallery.revealFirstCard();
+    }
+  }
+
+  /**
+   * Called when all 5 Hero Cards have been navigated through
+   */
+  async onHeroCardsFinished() {
+    const transMonologue = this.element.querySelector('#p2-trans-monologue');
+    const transLine1 = this.element.querySelector('#p2-trans-1');
+    const transLine2 = this.element.querySelector('#p2-trans-2');
+    const content = STORY_CONTENT.phase2;
+
+    // 1. Transition Monologue Sequence ("Dan sebenarnya... tidak hanya lima kepingan itu")
+    if (transMonologue && transLine1 && transLine2) {
+      transMonologue.style.visibility = 'visible';
+      transMonologue.style.pointerEvents = 'auto';
+
+      await Typewriter.sequence(
+        transMonologue,
+        [
+          { element: transLine1, text: content.transitionMonologueLine1, options: { speed: 36 } },
+          { element: transLine2, text: content.transitionMonologueLine2, options: { speed: 36 } },
+        ],
+        3000
+      );
+
+      transMonologue.style.visibility = 'hidden';
+      transMonologue.style.pointerEvents = 'none';
+    }
+
+    // 2. Reveal Floating Mosaic Wall of all 12 photos
+    if (this.mosaicWall) {
+      await this.mosaicWall.reveal();
     }
   }
 
@@ -374,6 +450,10 @@ export class Phase2Scene {
     if (this.gallery) {
       this.gallery.destroy();
       this.gallery = null;
+    }
+    if (this.mosaicWall) {
+      this.mosaicWall.destroy();
+      this.mosaicWall = null;
     }
     if (this.flower) {
       this.flower.destroy();
