@@ -150,42 +150,20 @@ export class MosaicWall {
 
     // 1. Unblur the photo on the grid permanently
     const img = buttonEl.querySelector('.mosaic-img');
-    const rippleWrap = buttonEl.querySelector('.mosaic-ripple-container');
 
     if (!this.clarifiedMap.has(photoId)) {
       this.clarifiedMap.add(photoId);
-      audioManager.playWaterRipple(0.38);
+      audioManager.playWaterRipple(0.35);
 
       if (img) {
         img.classList.remove('is-blurred');
         img.classList.add('is-clarified');
       }
-
-      // Spawn water ripple inside polaroid
-      if (rippleWrap) {
-        const ripple = document.createElement('div');
-        ripple.className = 'mosaic-water-ripple';
-        rippleWrap.appendChild(ripple);
-
-        gsap.fromTo(
-          ripple,
-          { scale: 0.1, opacity: 0.9 },
-          {
-            scale: 2.8,
-            opacity: 0,
-            duration: 0.6,
-            ease: 'power1.out',
-            onComplete: () => {
-              if (ripple.parentNode) ripple.parentNode.removeChild(ripple);
-            },
-          }
-        );
-      }
     } else {
-      audioManager.playWaterRipple(0.25);
+      audioManager.playWaterRipple(0.22);
     }
 
-    // 2. Open high-resolution detail spotlight
+    // 2. Open high-resolution detail spotlight immediately
     this.openSpotlight(photo);
   }
 
