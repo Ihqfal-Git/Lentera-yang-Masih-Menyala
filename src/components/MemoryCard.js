@@ -75,13 +75,15 @@ export class MemoryCard {
             <!-- The Real Partner Photo (starts blurred until tapped) -->
             <img class="memory-img" src="${this.imageSrc}" alt="Potret dalam ingatan" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 25%; opacity: 0; filter: blur(16px) brightness(0.85); transform: scale(1.06); pointer-events: none; will-change: filter, transform, opacity;" loading="eager" />
             
-            <!-- Ambient Water Ripple Beacon (Pure Visual Touch Cue like Phase 3) -->
-            <div class="memory-ambient-ripple-beacon" aria-hidden="true" style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; z-index: 23;">
-              <div class="ambient-ripple-core"></div>
-              <div class="ambient-water-ring ring-1"></div>
-              <div class="ambient-water-ring ring-2"></div>
-              <div class="ambient-water-ring ring-3"></div>
-            </div>
+            <!-- Ambient Water Ripple Beacon (Pure Visual Touch Cue like Phase 3, ONLY on Photo 1) -->
+            ${this.index === 0 ? `
+              <div class="memory-ambient-ripple-beacon" aria-hidden="true" style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; z-index: 23;">
+                <div class="ambient-ripple-core"></div>
+                <div class="ambient-water-ring ring-1"></div>
+                <div class="ambient-water-ring ring-2"></div>
+                <div class="ambient-water-ring ring-3"></div>
+              </div>
+            ` : ''}
 
             <!-- Dynamic Tap Water Ripples Container -->
             <div class="memory-water-ripples-container" aria-hidden="true" style="position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 24;"></div>
