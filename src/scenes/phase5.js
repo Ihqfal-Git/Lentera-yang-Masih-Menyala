@@ -463,13 +463,13 @@ export class Phase5Scene {
     progressEl.style.visibility = 'visible';
 
     // Hint description based on chosen ending
-    let baseHint = 'Ketuk sembarang layar untuk memandu kupu-kupu';
+    let baseHint = 'Ketuk sembarang layar';
     if (choiceKey === 'reconcile') {
-      baseHint = 'Sentuh layar untuk memandu kupu-kupu';
+      baseHint = 'Sentuh layar';
     } else if (choiceKey === 'wait') {
-      baseHint = 'Sentuh kupu-kupu yang beristirahat';
+      baseHint = 'Sentuh kupu-kupu';
     } else if (choiceKey === 'farewell') {
-      baseHint = 'Sentuh lentera hati untuk mengikhlaskan';
+      baseHint = 'Sentuh lentera hati';
     }
 
     if (hintEl) {
@@ -534,7 +534,7 @@ export class Phase5Scene {
           this.isInteractionCoolingDown = false;
           if (hintEl && !this.endingInteracted) {
             hintEl.classList.remove('is-cooling-down');
-            hintEl.textContent = 'Sentuh kembali untuk melanjutkan';
+            hintEl.textContent = 'Sentuh kembali';
           }
         }, 3000);
       }
