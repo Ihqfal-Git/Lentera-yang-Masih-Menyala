@@ -5,7 +5,7 @@ import { audioManager } from '../audio/audioManager.js';
  * MemoryCard Component
  * Displays partner memory photo with:
  * 1. Initial atmospheric blur state & hidden caption
- * 2. Center tap target to trigger dynamic water ripple waves, crystal sound, and unblur transition
+ * 2. Tap anywhere on photo to trigger pure dynamic water ripple wave & unblur transition
  * 3. 3D depth deck-shuffling physics on swipe/click navigation
  * 4. Persistent clarification state across next/prev navigation
  */
@@ -58,8 +58,8 @@ export class MemoryCard {
           <!-- Peeking Glow Right (active when hovering/dragging right zone) -->
           <div class="memory-peeking-glow glow-right" aria-hidden="true"></div>
 
-          <!-- The Main Photo Frame (moves during drag and card shuffle, receives taps) -->
-          <div class="memory-photo-frame" style="position: relative; width: 100%; height: 100%; border-radius: 16px; overflow: hidden; background: linear-gradient(145deg, rgba(255,255,255,0.07) 0%, rgba(20,15,30,0.8) 100%); border: 1px solid rgba(255, 255, 255, 0.12); box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55), 0 0 30px rgba(242, 203, 134, 0.08); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); z-index: 22; pointer-events: auto; cursor: pointer; will-change: transform, opacity, filter;">
+          <!-- The Main Photo Frame (receives tap to clarify) -->
+          <div class="memory-photo-frame" role="button" tabindex="0" aria-label="Sentuh foto untuk menjernihkan" style="position: relative; width: 100%; height: 100%; border-radius: 16px; overflow: hidden; background: linear-gradient(145deg, rgba(255,255,255,0.07) 0%, rgba(20,15,30,0.8) 100%); border: 1px solid rgba(255, 255, 255, 0.12); box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55), 0 0 30px rgba(242, 203, 134, 0.08); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); z-index: 22; pointer-events: auto; cursor: pointer; will-change: transform, opacity, filter; -webkit-tap-highlight-color: transparent; outline: none;">
             
             <!-- Artistic Placeholder Backdrop (shown if photo is missing) -->
             <div class="memory-placeholder-art" style="position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; background: radial-gradient(circle at 50% 40%, rgba(247, 169, 136, 0.18) 0%, rgba(30, 20, 45, 0.85) 80%); color: var(--accent-gold); padding: 1.5rem; text-align: center; pointer-events: none;">
@@ -72,25 +72,10 @@ export class MemoryCard {
             </div>
 
             <!-- The Real Partner Photo (starts blurred until tapped) -->
-            <img class="memory-img" src="${this.imageSrc}" alt="Potret dalam ingatan" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 25%; opacity: 0; filter: blur(18px) brightness(0.82); transform: scale(1.08); pointer-events: none; will-change: filter, transform, opacity;" loading="eager" />
+            <img class="memory-img" src="${this.imageSrc}" alt="Potret dalam ingatan" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 25%; opacity: 0; filter: blur(16px) brightness(0.85); transform: scale(1.06); pointer-events: none; will-change: filter, transform, opacity;" loading="eager" />
             
             <!-- Dynamic Water Ripples Container -->
             <div class="memory-water-ripples-container" aria-hidden="true" style="position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 23;"></div>
-
-            <!-- Central Interactive Clarify Trigger -->
-            <button class="memory-clarify-trigger" type="button" aria-label="Ketuk foto untuk menjernihkan ingatan" tabindex="0" style="position: absolute; inset: 0; width: 100%; height: 100%; background: transparent; border: none; padding: 0; margin: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 24; cursor: pointer; pointer-events: auto; -webkit-tap-highlight-color: transparent; outline: none; touch-action: manipulation;">
-              <div class="clarify-beacon">
-                <div class="clarify-ripple-ring ring-1"></div>
-                <div class="clarify-ripple-ring ring-2"></div>
-                <div class="clarify-icon-core">
-                  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                    <!-- Water droplet silhouette -->
-                    <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path>
-                  </svg>
-                </div>
-                <span class="clarify-label">Ketuk untuk menjernihkan</span>
-              </div>
-            </button>
 
             <!-- Soft Atmospheric Frame Vignette -->
             <div class="memory-inner-vignette" style="position: absolute; inset: 0; background: radial-gradient(circle at center, transparent 60%, rgba(10, 8, 18, 0.45) 100%); pointer-events: none; z-index: 4;"></div>
@@ -137,11 +122,10 @@ export class MemoryCard {
   }
 
   /**
-   * Bind clarify center tap listener
+   * Bind clarify tap listener on the photo frame
    */
   bindClarifyTrigger(wrapper) {
     const photoFrame = wrapper.querySelector('.memory-photo-frame');
-    const triggerBtn = wrapper.querySelector('.memory-clarify-trigger');
     if (!photoFrame) return;
 
     this.handleClarifyClick = (e) => {
@@ -160,15 +144,11 @@ export class MemoryCard {
       this.clarify(clickX, clickY);
     };
 
-    // Attach to both photoFrame and triggerBtn for 100% tap hit reliability
     photoFrame.addEventListener('click', this.handleClarifyClick);
-    if (triggerBtn) {
-      triggerBtn.addEventListener('click', this.handleClarifyClick);
-    }
   }
 
   /**
-   * Perform the water ripple clarify animation and reveal the caption
+   * Perform pure water ripple clarify animation and reveal caption
    * @param {number} x - Relative X coordinate inside the photo frame
    * @param {number} y - Relative Y coordinate inside the photo frame
    */
@@ -178,14 +158,13 @@ export class MemoryCard {
 
     const photoFrame = this.element.querySelector('.memory-photo-frame');
     const img = this.element.querySelector('.memory-img');
-    const triggerBtn = this.element.querySelector('.memory-clarify-trigger');
     const captionWrapper = this.element.querySelector('.memory-caption-wrapper');
     const ripplesContainer = this.element.querySelector('.memory-water-ripples-container');
 
     // 1. Play crystal water drop sound effect
     audioManager.playWaterRipple(0.38);
 
-    // 2. Spawn dynamic water ripple wave rings
+    // 2. Spawn dynamic water ripple wave rings from tap coordinates
     if (ripplesContainer && photoFrame) {
       const frameRect = photoFrame.getBoundingClientRect();
       const originX = x !== null ? x : frameRect.width / 2;
@@ -199,25 +178,25 @@ export class MemoryCard {
           position: absolute;
           left: ${originX}px;
           top: ${originY}px;
-          width: 24px;
-          height: 24px;
-          margin-left: -12px;
-          margin-top: -12px;
+          width: 30px;
+          height: 30px;
+          margin-left: -15px;
+          margin-top: -15px;
           border-radius: 50%;
-          border: ${1.5 + i * 0.5}px solid rgba(255, 255, 255, 0.9);
-          background: radial-gradient(circle, rgba(242, 203, 134, 0.35) 0%, rgba(255, 255, 255, 0.12) 45%, transparent 70%);
-          box-shadow: 0 0 ${20 + i * 10}px rgba(242, 203, 134, 0.8), inset 0 0 15px rgba(255, 255, 255, 0.6);
+          border: ${1.5 + i * 0.5}px solid rgba(255, 255, 255, 0.85);
+          background: radial-gradient(circle, rgba(242, 203, 134, 0.3) 0%, rgba(255, 255, 255, 0.1) 40%, transparent 70%);
+          box-shadow: 0 0 ${20 + i * 12}px rgba(242, 203, 134, 0.75), inset 0 0 15px rgba(255, 255, 255, 0.5);
           pointer-events: none;
-          transform: scale(0.1);
-          opacity: 1;
+          transform: scale(0.08);
+          opacity: 0.95;
         `;
         ripplesContainer.appendChild(ripple);
 
         gsap.to(ripple, {
-          scale: 4.8 + i * 1.6,
+          scale: 5.2 + i * 1.8,
           opacity: 0,
-          duration: 1.25 + i * 0.25,
-          delay: i * 0.12,
+          duration: 1.2 + i * 0.25,
+          delay: i * 0.1,
           ease: 'power2.out',
           onComplete: () => {
             if (ripple.parentNode) {
@@ -228,21 +207,7 @@ export class MemoryCard {
       }
     }
 
-    // 3. Fade out and disable clarify button
-    if (triggerBtn) {
-      gsap.to(triggerBtn, {
-        opacity: 0,
-        scale: 0.75,
-        duration: 0.45,
-        ease: 'power2.in',
-        onComplete: () => {
-          triggerBtn.style.pointerEvents = 'none';
-          triggerBtn.style.visibility = 'hidden';
-        },
-      });
-    }
-
-    // 4. Smoothly clear photo blur & reset scale
+    // 3. Smoothly clear photo blur & reset scale
     if (img) {
       gsap.to(img, {
         filter: 'blur(0px) brightness(1)',
@@ -252,7 +217,7 @@ export class MemoryCard {
       });
     }
 
-    // 5. Reveal poetic caption
+    // 4. Reveal poetic caption
     if (captionWrapper) {
       captionWrapper.style.visibility = 'visible';
       captionWrapper.style.pointerEvents = 'auto';
@@ -263,30 +228,67 @@ export class MemoryCard {
       );
     }
 
-    // 6. Notify gallery that this card has been clarified
+    // 5. Notify gallery that this card has been clarified
     this.onClarified(this.index);
   }
 
   /**
-   * Pulse/shake cue to guide the user on Card 0 when they attempt to skip without unblurring
+   * Subtle water ripple pulse cue if user attempts to skip Card 0 without unblurring
    */
   pulseClarifyCue() {
     if (!this.element || this.isClarified) return;
-    const triggerBtn = this.element.querySelector('.memory-clarify-trigger');
-    const beacon = this.element.querySelector('.clarify-beacon');
+    const photoFrame = this.element.querySelector('.memory-photo-frame');
+    const ripplesContainer = this.element.querySelector('.memory-water-ripples-container');
 
-    if (beacon) {
+    if (photoFrame) {
+      // Gentle card wobble
       gsap.fromTo(
-        beacon,
-        { scale: 1 },
+        photoFrame,
+        { x: -6 },
         {
-          scale: 1.22,
-          duration: 0.25,
+          x: 6,
+          duration: 0.1,
           yoyo: true,
           repeat: 3,
           ease: 'power2.inOut',
+          onComplete: () => {
+            gsap.set(photoFrame, { x: 0 });
+          },
         }
       );
+
+      // Subtle center water ripple pulse
+      if (ripplesContainer) {
+        const frameRect = photoFrame.getBoundingClientRect();
+        const ripple = document.createElement('div');
+        ripple.className = 'memory-water-ripple ring-cue';
+        ripple.style.cssText = `
+          position: absolute;
+          left: ${frameRect.width / 2}px;
+          top: ${frameRect.height / 2}px;
+          width: 30px;
+          height: 30px;
+          margin-left: -15px;
+          margin-top: -15px;
+          border-radius: 50%;
+          border: 1.5px solid rgba(242, 203, 134, 0.7);
+          box-shadow: 0 0 20px rgba(242, 203, 134, 0.5);
+          pointer-events: none;
+          transform: scale(0.1);
+          opacity: 0.85;
+        `;
+        ripplesContainer.appendChild(ripple);
+
+        gsap.to(ripple, {
+          scale: 3.5,
+          opacity: 0,
+          duration: 1.0,
+          ease: 'power2.out',
+          onComplete: () => {
+            if (ripple.parentNode) ripple.parentNode.removeChild(ripple);
+          },
+        });
+      }
     }
   }
 
@@ -296,7 +298,6 @@ export class MemoryCard {
   syncClarificationVisuals() {
     if (!this.element) return;
     const img = this.element.querySelector('.memory-img');
-    const triggerBtn = this.element.querySelector('.memory-clarify-trigger');
     const captionWrapper = this.element.querySelector('.memory-caption-wrapper');
     const photoFrame = this.element.querySelector('.memory-photo-frame');
 
@@ -308,11 +309,6 @@ export class MemoryCard {
       if (img) {
         gsap.set(img, { filter: 'blur(0px) brightness(1)', scale: 1.0, opacity: 1 });
       }
-      if (triggerBtn) {
-        triggerBtn.style.opacity = '0';
-        triggerBtn.style.pointerEvents = 'none';
-        triggerBtn.style.visibility = 'hidden';
-      }
       if (captionWrapper) {
         captionWrapper.style.visibility = 'visible';
         captionWrapper.style.pointerEvents = 'auto';
@@ -320,13 +316,7 @@ export class MemoryCard {
       }
     } else {
       if (img) {
-        gsap.set(img, { filter: 'blur(18px) brightness(0.82)', scale: 1.08, opacity: 1 });
-      }
-      if (triggerBtn) {
-        triggerBtn.style.opacity = '1';
-        triggerBtn.style.pointerEvents = 'auto';
-        triggerBtn.style.visibility = 'visible';
-        gsap.set(triggerBtn, { opacity: 1, scale: 1 });
+        gsap.set(img, { filter: 'blur(16px) brightness(0.85)', scale: 1.06, opacity: 1 });
       }
       if (captionWrapper) {
         captionWrapper.style.visibility = 'hidden';
@@ -355,7 +345,6 @@ export class MemoryCard {
 
   /**
    * Real-time tactile feedback during mobile finger drag/swipe
-   * ONLY the photo card frame (.memory-photo-frame) moves, while peeking glow indicator stays anchored!
    * @param {number} deltaX - Horizontal drag offset in px
    */
   setLiveDragOffset(deltaX) {
@@ -364,7 +353,7 @@ export class MemoryCard {
     if (!photoFrame) return;
 
     const clampedX = Math.max(-130, Math.min(130, deltaX * 0.48));
-    const rotation = clampedX * 0.045; // Gentle natural card tilt
+    const rotation = clampedX * 0.045;
 
     gsap.to(photoFrame, {
       x: clampedX,
@@ -797,10 +786,8 @@ export class MemoryCard {
     }
 
     const photoFrame = this.element ? this.element.querySelector('.memory-photo-frame') : null;
-    const triggerBtn = this.element ? this.element.querySelector('.memory-clarify-trigger') : null;
-    if (this.handleClarifyClick) {
-      if (photoFrame) photoFrame.removeEventListener('click', this.handleClarifyClick);
-      if (triggerBtn) triggerBtn.removeEventListener('click', this.handleClarifyClick);
+    if (photoFrame && this.handleClarifyClick) {
+      photoFrame.removeEventListener('click', this.handleClarifyClick);
     }
 
     if (this.element && this.element.parentNode) {
