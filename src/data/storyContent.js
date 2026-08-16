@@ -230,6 +230,14 @@ export const STORY_CONTENT = {
         confirmExplanation: 'Langkah ini berarti kamu memilih untuk membuka kembali ruang percakapan, bersedia mendengar dan berbagi rasa tanpa ada yang merasa diadili.',
         vibeTitle: 'Cahaya Fajar & Percakapan Baru',
         songTrackName: "Maliq & D'Essentials — Senja Teduh Pelita",
+        moodQuotes: [
+          'Membuka ruang untuk saling mendengar...',
+          'Menyapa kembali hening yang sempat ada...',
+          'Ada senyum yang tak pernah pudar...',
+          'Setiap kata menemukan arah pulangnya...',
+          'Langkah kita kembali bersisian...',
+          'Di antara jeda, kita saling menemukan...',
+        ],
         // LRC Synced Lyrics untuk Ending 1
         lrcLyrics: `[00:32.87] Kita duduk di taman
 [00:35.84] Bunganya bermekaran
@@ -318,6 +326,14 @@ export const STORY_CONTENT = {
         confirmExplanation: 'Langkah ini berarti kamu memilih untuk memberi waktu bagi diri sendiri, tanpa terburu-buru hingga hatimu benar-benar menemukan ketenangan.',
         vibeTitle: 'Temaram Rembulan & Ruang Hening',
         songTrackName: 'Nadin Amizah — Bunga Tidur',
+        moodQuotes: [
+          'Membiarkan waktu merawat segalanya...',
+          'Mengambil jeda untuk menata rasa...',
+          'Tenanglah, biarkan malam memeluk sunyi...',
+          'Waktu selalu tahu kapan harus menjawab...',
+          'Dalam diam, doa-doa tetap bertaut...',
+          'Semoga kelak kita bertemu dalam versi terbaik...',
+        ],
         // LRC Synced Lyrics untuk Ending 2
         lrcLyrics: `[00:12.21] Bunga tidur apa kabarmu pagi ini sayang?
 [00:26.25] Kau terbangun di antara nyaringnya rambu perpisahan
@@ -375,6 +391,14 @@ export const STORY_CONTENT = {
         confirmExplanation: 'Langkah ini berarti kamu memilih untuk merelakan akhir dari perjalanan ini, melangkah pergi dengan damai dan rasa terima kasih atas setiap kenangan yang pernah ada.',
         vibeTitle: 'Senja Tenang & Keikhlasan',
         songTrackName: 'Lovarian — Perpisahan Termanis',
+        moodQuotes: [
+          'Menerima akhir dengan penuh keikhlasan...',
+          'Terima kasih untuk setiap tawa yang pernah ada...',
+          'Merelakan bukan berarti melupakan...',
+          'Kulepaskan genggaman dengan rasa syukur...',
+          'Semoga bahagiamu mekar di jalan yang kau tuju...',
+          'Menjadi kenangan terindah yang tersimpan rapi...',
+        ],
         // LRC Synced Lyrics untuk Ending 3
         lrcLyrics: `[00:15.16] Bila nanti kita berpisah
 [00:18.61] Jangan kau lupakan

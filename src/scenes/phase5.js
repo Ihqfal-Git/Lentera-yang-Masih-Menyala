@@ -462,18 +462,18 @@ export class Phase5Scene {
     progressEl.className = `p5-interact-progress theme-${choiceKey}`;
     progressEl.style.visibility = 'visible';
 
-    // Hint description based on chosen ending
-    let baseHint = 'Ketuk sembarang layar';
-    if (choiceKey === 'reconcile') {
-      baseHint = 'Sentuh layar';
-    } else if (choiceKey === 'wait') {
-      baseHint = 'Sentuh kupu-kupu';
-    } else if (choiceKey === 'farewell') {
-      baseHint = 'Sentuh lentera hati';
-    }
+    // Dynamic atmospheric quotes based on chosen ending mood
+    const choiceData = STORY_CONTENT.phase5.choices[choiceKey];
+    const quotes = (choiceData && choiceData.moodQuotes) ? choiceData.moodQuotes : [
+      'Dengarkan alunannya sejenak...',
+      'Setiap rasa menemukan ruangnya...',
+      'Di antara aksara dan jeda...',
+      'Semoga langkahmu dipeluk tenang...',
+      'Terima kasih telah membersamai kisah ini...',
+    ];
 
     if (hintEl) {
-      hintEl.textContent = baseHint;
+      hintEl.textContent = quotes[0] || 'Dengarkan alunannya sejenak...';
       hintEl.classList.remove('is-cooling-down');
     }
 
@@ -502,10 +502,18 @@ export class Phase5Scene {
         );
       }
 
-      // Temporary listening pause hint to encourage hearing the song
+      // Smoothly cross-fade to the next poetic quote matching the heart's atmosphere
+      const nextQuote = quotes[this.interactionClicks] || quotes[quotes.length - 1];
       if (hintEl) {
-        hintEl.textContent = 'Dengarkan alunannya sejenak...';
-        hintEl.classList.add('is-cooling-down');
+        gsap.to(hintEl, {
+          opacity: 0,
+          y: -4,
+          duration: 0.25,
+          onComplete: () => {
+            hintEl.textContent = nextQuote;
+            gsap.to(hintEl, { opacity: 1, y: 0, duration: 0.45 });
+          },
+        });
       }
 
       if (this.interactionClicks >= this.maxInteractionClicks) {
@@ -529,14 +537,10 @@ export class Phase5Scene {
           }
         }, 2800);
       } else {
-        // Cooldown delay (3.0s) between each click so user takes time to listen to the song
+        // Cooldown delay (2.5s) between each click so user takes time to listen to the song and absorb the thought
         this.cooldownTimeout = setTimeout(() => {
           this.isInteractionCoolingDown = false;
-          if (hintEl && !this.endingInteracted) {
-            hintEl.classList.remove('is-cooling-down');
-            hintEl.textContent = 'Sentuh kembali';
-          }
-        }, 3000);
+        }, 2500);
       }
     };
 
