@@ -10,8 +10,10 @@ export const STORY_CONTENT = {
   // Global & General Info
   meta: {
     title: 'Lentera yang Masih Menyala',
-    author: 'Dia',
-    partnerName: 'Dia',
+    author: 'Muhammad Ihqfal',
+    authorCallsign: 'Ihqfal',
+    partnerName: 'Annisa Latifah',
+    partnerCallsign: 'Latifah',
   },
 
   // FASE 1: THE BEGINNING (Ruang Hening)
@@ -78,7 +80,7 @@ export const STORY_CONTENT = {
     // Surat utama
     letter: {
       envelopeAriaLabel: 'Ketuk untuk membuka surat percakapan',
-      greeting: 'Untukmu,',
+      greeting: 'Untukmu, Latifah,',
       paragraphs: [
         'Ada beberapa hal yang rupanya lebih sulit disampaikan daripada yang pernah kubayangkan.',
         'Bukan karena aku tidak memiliki kata-kata, melainkan karena terlalu banyak yang ingin kusampaikan, sementara kita justru semakin sering kehilangan makna di antara kata-kata itu.',
@@ -93,7 +95,7 @@ export const STORY_CONTENT = {
         'Aku tidak tahu apa yang akan menunggu kita di ujung percakapan itu. Tetapi setidaknya kali ini, aku ingin kita sampai di sana dengan kata-kata yang jujur. Bukan dengan diam. Bukan dengan asumsi. Bukan dengan hal-hal yang tidak pernah sempat kita katakan.',
         'Terima kasih sudah sampai sejauh ini. Jika suatu saat nanti kamu bersedia, aku masih ingin mendengar kata-kata yang tersimpan di dalam hatimu.<br><br>Apa pun yang kamu pilih, biarlah itu menjadi keputusan yang benar-benar datang darimu, sebagai langkah yang ingin kamu jalani.',
       ],
-      signature: '— Dia',
+      signature: '— Ihqfal',
     },
 
     // Refleksi penutup setelah membaca surat (menuju Fase 5)
