@@ -2480,7 +2480,7 @@
 /* Ending Narrative Stage: Positioned cleanly BELOW the Heart character */
 .p5-ending-stage {
   position: absolute;
-  top: 36%;
+  top: 48%;
   left: 0;
   right: 0;
   bottom: 0;
@@ -2651,7 +2651,7 @@
 /* Synchronized Song Lyrics Stage (Positioned Cleanly Below Heart) */
 .p5-lyrics-stage {
   position: absolute;
-  top: 36%;
+  top: 48%;
   left: 0;
   right: 0;
   bottom: 0;
@@ -2666,6 +2666,16 @@
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.6s ease, visibility 0.6s ease;
+}
+
+@media (max-width: 580px) {
+  .p5-lyrics-stage {
+    top: 45%;
+  }
+
+  .p5-ending-stage {
+    top: 45%;
+  }
 }
 
 .p5-lyrics-stage.is-active {

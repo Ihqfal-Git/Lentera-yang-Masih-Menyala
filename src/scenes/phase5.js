@@ -399,7 +399,7 @@ export class Phase5Scene {
       gsap.to(narBox, { opacity: 0, duration: 0.6 });
     }
 
-    // Smoothly animate Heart back up from center (50%) to upper position (14%) for all endings
+    // Smoothly animate Heart back up from center (50%) to upper position (10%) for all endings
     const heartStage = this.element.querySelector('#p5-heart-stage');
     const heartSpotlight = this.element.querySelector('#p5-heart-spotlight');
     if (heartStage) {
@@ -407,7 +407,7 @@ export class Phase5Scene {
       await new Promise(resolve => {
         const tl = gsap.timeline({ onComplete: resolve });
         tl.to(heartStage, {
-          top: isMobile ? '12%' : '14%',
+          top: isMobile ? '8%' : '10%',
           duration: 1.25,
           ease: 'power3.inOut',
         }, 0);
