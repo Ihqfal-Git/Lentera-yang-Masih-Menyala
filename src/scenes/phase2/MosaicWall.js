@@ -158,6 +158,7 @@ export class MosaicWall {
 
       if (img) {
         img.classList.remove('is-blurred');
+        img.classList.add('is-clarified');
         gsap.to(img, {
           filter: 'blur(0px) brightness(1)',
           scale: 1.0,

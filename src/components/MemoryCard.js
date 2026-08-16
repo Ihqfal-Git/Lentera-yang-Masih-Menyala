@@ -73,7 +73,7 @@ export class MemoryCard {
             </div>
 
             <!-- The Real Partner Photo (starts blurred until tapped) -->
-            <img class="memory-img" src="${this.imageSrc}" alt="Potret dalam ingatan" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 25%; opacity: 0; filter: blur(14px) brightness(0.85); transform: scale(1.04) translateZ(0); pointer-events: none;" loading="${this.index === 0 ? 'eager' : 'lazy'}" decoding="async" />
+            <img class="memory-img is-blurred" src="${this.imageSrc}" alt="Potret dalam ingatan" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 25%; opacity: 0; pointer-events: none;" loading="${this.index === 0 ? 'eager' : 'lazy'}" decoding="async" />
             
             <!-- Ambient Water Ripple Beacon (Pure Visual Touch Cue like Phase 3, ONLY on Photo 1) -->
             ${this.index === 0 ? `
@@ -234,10 +234,13 @@ export class MemoryCard {
 
     // 4. Smoothly clear photo blur & reset scale
     if (img) {
+      img.classList.remove('is-blurred');
+      img.classList.add('is-clarified');
+      img.style.filter = '';
       gsap.to(img, {
         filter: 'blur(0px) brightness(1)',
         scale: 1.0,
-        duration: 0.95,
+        duration: 0.85,
         ease: 'power2.out',
       });
     }
@@ -314,6 +317,9 @@ export class MemoryCard {
 
     if (this.isClarified) {
       if (img) {
+        img.classList.remove('is-blurred');
+        img.classList.add('is-clarified');
+        img.style.filter = '';
         gsap.set(img, { filter: 'blur(0px) brightness(1)', scale: 1.0, opacity: 1 });
       }
       if (ambientBeacon) {
@@ -327,7 +333,10 @@ export class MemoryCard {
       }
     } else {
       if (img) {
-        gsap.set(img, { filter: 'blur(16px) brightness(0.85)', scale: 1.06, opacity: 1 });
+        img.classList.add('is-blurred');
+        img.classList.remove('is-clarified');
+        img.style.filter = '';
+        gsap.set(img, { scale: 1.04, opacity: 1 });
       }
       if (ambientBeacon) {
         ambientBeacon.style.display = 'flex';

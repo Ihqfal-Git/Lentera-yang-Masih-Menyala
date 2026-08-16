@@ -1113,15 +1113,30 @@
     -webkit-backdrop-filter: none !important;
   }
 
-  .memory-img {
-    filter: blur(6px) brightness(0.9) !important;
-    transform: scale(1.03) translateZ(0) !important;
+  .memory-img.is-blurred {
+    filter: blur(6px) brightness(0.9);
+    transform: scale(1.03) translateZ(0);
+  }
+
+  .memory-img.is-clarified {
+    filter: blur(0px) brightness(1) !important;
+    transform: scale(1.0) translateZ(0) !important;
   }
 
   .memory-peeking-glow {
     filter: none !important;
     box-shadow: 0 0 16px rgba(242, 203, 134, 0.3) !important;
   }
+}
+
+.memory-img.is-clarified {
+  filter: blur(0px) brightness(1) !important;
+  transform: scale(1.0) translateZ(0) !important;
+}
+
+.mosaic-img.is-clarified {
+  filter: blur(0px) brightness(1) !important;
+  transform: scale(1.0) !important;
 }
 
 /* Interactive Flower Section */
