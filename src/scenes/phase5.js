@@ -396,7 +396,7 @@ export class Phase5Scene {
     // Narrative box fade out
     const narBox = this.element.querySelector('#p5-narrative-box');
     if (narBox) {
-      gsap.to(narBox, { opacity: 0, duration: 0.6 });
+      gsap.to(narBox, { opacity: 0, duration: 0.3 });
     }
 
     // Smoothly animate Heart back up from center (50%) to upper position (10%) for all endings
@@ -408,15 +408,15 @@ export class Phase5Scene {
         const tl = gsap.timeline({ onComplete: resolve });
         tl.to(heartStage, {
           top: isMobile ? '8%' : '10%',
-          duration: 1.25,
-          ease: 'power3.inOut',
+          duration: 0.55,
+          ease: 'power2.out',
         }, 0);
         if (heartSpotlight) {
           tl.to(heartSpotlight, {
             scale: 1.15,
             opacity: 0.9,
-            duration: 1.25,
-            ease: 'power3.inOut',
+            duration: 0.55,
+            ease: 'power2.out',
           }, 0);
         }
       });
@@ -490,8 +490,8 @@ export class Phase5Scene {
     // Fade in progress bar
     gsap.fromTo(
       progressEl,
-      { opacity: 0, y: 15 },
-      { opacity: 1, y: 0, duration: 1.0, delay: 0.6, ease: 'power2.out' }
+      { opacity: 0, y: 10 },
+      { opacity: 1, y: 0, duration: 0.4, delay: 0.1, ease: 'power2.out' }
     );
 
     this.cleanupEndingInteraction();

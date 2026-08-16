@@ -93,6 +93,7 @@ export class ChoiceSelector {
     const btn2 = this.container.querySelector('.choice-wait');
     const btn3 = this.container.querySelector('.choice-farewell');
 
+    this.container.style.display = '';
     this.container.classList.add('is-visible');
     this.container.style.visibility = 'visible';
 
@@ -104,87 +105,31 @@ export class ChoiceSelector {
     });
     this.activeTimelines.push(choicesTl);
 
-    choicesTl.to(this.container, { opacity: 1, duration: 0.5 });
+    choicesTl.to(this.container, { opacity: 1, duration: 0.4 });
 
     if (btn1) {
       choicesTl.fromTo(
         btn1,
-        { opacity: 0, x: -30, y: -20, scale: 0.88 },
-        { opacity: 1, x: 0, y: 0, scale: 1, duration: 0.9, ease: 'back.out(1.4)' },
+        { opacity: 0, scale: 0.92, y: 10 },
+        { opacity: 1, scale: 1, y: 0, duration: 0.45, ease: 'power2.out' },
         0
       );
     }
     if (btn2) {
       choicesTl.fromTo(
         btn2,
-        { opacity: 0, x: 30, y: -20, scale: 0.88 },
-        { opacity: 1, x: 0, y: 0, scale: 1, duration: 0.9, ease: 'back.out(1.4)' },
-        0.12
+        { opacity: 0, scale: 0.92, y: 10 },
+        { opacity: 1, scale: 1, y: 0, duration: 0.45, ease: 'power2.out' },
+        0.08
       );
     }
     if (btn3) {
       choicesTl.fromTo(
         btn3,
-        { opacity: 0, y: 35, scale: 0.88 },
-        { opacity: 1, y: 0, scale: 1, duration: 0.9, ease: 'back.out(1.4)' },
-        0.24
+        { opacity: 0, scale: 0.92, y: 10 },
+        { opacity: 1, scale: 1, y: 0, duration: 0.45, ease: 'power2.out' },
+        0.16
       );
-    }
-  }
-
-  showConfirmModal(choiceKey) {
-    if (!this.modalOverlay) return;
-    this.pendingChoice = choiceKey;
-    const choiceData = STORY_CONTENT.phase5.choices[choiceKey];
-    if (!choiceData) return;
-
-    const modal = this.modalOverlay.querySelector('#p5-confirm-modal');
-    const badge = this.modalOverlay.querySelector('#p5-confirm-badge');
-    const question = this.modalOverlay.querySelector('#p5-confirm-question');
-    const explanation = this.modalOverlay.querySelector('#p5-confirm-explanation');
-
-    if (badge) badge.textContent = choiceData.confirmBadge;
-    if (question) question.textContent = choiceData.confirmQuestion;
-    if (explanation) explanation.textContent = choiceData.confirmExplanation;
-
-    this.modalOverlay.classList.add('is-active', 'is-open');
-    this.modalOverlay.style.visibility = 'visible';
-    this.modalOverlay.style.pointerEvents = 'auto';
-    this.modalOverlay.style.opacity = '1';
-
-    if (modal) {
-      gsap.fromTo(
-        modal,
-        { scale: 0.88, opacity: 0, y: 20 },
-        { scale: 1, opacity: 1, y: 0, duration: 0.5, ease: 'back.out(1.5)' }
-      );
-    }
-  }
-
-  hideConfirmModal() {
-    if (!this.modalOverlay) return;
-    this.pendingChoice = null;
-    const modal = this.modalOverlay.querySelector('#p5-confirm-modal');
-
-    if (modal) {
-      gsap.to(modal, {
-        scale: 0.92,
-        opacity: 0,
-        y: 15,
-        duration: 0.35,
-        ease: 'power2.in',
-        onComplete: () => {
-          this.modalOverlay.classList.remove('is-active', 'is-open');
-          this.modalOverlay.style.visibility = 'hidden';
-          this.modalOverlay.style.pointerEvents = 'none';
-          this.modalOverlay.style.opacity = '0';
-        },
-      });
-    } else {
-      this.modalOverlay.classList.remove('is-active', 'is-open');
-      this.modalOverlay.style.visibility = 'hidden';
-      this.modalOverlay.style.pointerEvents = 'none';
-      this.modalOverlay.style.opacity = '0';
     }
   }
 
@@ -193,11 +138,12 @@ export class ChoiceSelector {
     if (this.modalOverlay) {
       gsap.to(this.modalOverlay, {
         opacity: 0,
-        duration: 0.6,
-        ease: 'power2.in',
+        duration: 0.22,
+        ease: 'power1.out',
         onComplete: () => {
           this.modalOverlay.classList.remove('is-active', 'is-open');
           this.modalOverlay.style.visibility = 'hidden';
+          this.modalOverlay.style.display = 'none';
           this.modalOverlay.style.pointerEvents = 'none';
           this.modalOverlay.style.opacity = '0';
         },
@@ -207,11 +153,12 @@ export class ChoiceSelector {
     if (this.container) {
       gsap.to(this.container, {
         opacity: 0,
-        y: 20,
-        duration: 0.8,
-        ease: 'power2.in',
+        y: 10,
+        duration: 0.22,
+        ease: 'power1.out',
         onComplete: () => {
           this.container.style.visibility = 'hidden';
+          this.container.style.display = 'none';
           this.container.style.pointerEvents = 'none';
         },
       });
