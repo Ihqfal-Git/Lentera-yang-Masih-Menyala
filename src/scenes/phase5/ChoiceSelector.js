@@ -89,7 +89,9 @@ export class ChoiceSelector {
 
   async revealChoices() {
     if (!this.container) return;
-    const choiceCards = this.container.querySelectorAll('.p5-choice-btn, .p5-choice-card');
+    const btn1 = this.container.querySelector('.choice-reconcile');
+    const btn2 = this.container.querySelector('.choice-wait');
+    const btn3 = this.container.querySelector('.choice-farewell');
 
     this.container.classList.add('is-visible');
     this.container.style.visibility = 'visible';
@@ -102,14 +104,32 @@ export class ChoiceSelector {
     });
     this.activeTimelines.push(choicesTl);
 
-    choicesTl
-      .to(this.container, { opacity: 1, duration: 0.6 })
-      .fromTo(
-        choiceCards,
-        { opacity: 0, y: 35, scale: 0.95 },
-        { opacity: 1, y: 0, scale: 1, stagger: 0.16, duration: 1.2, ease: 'power2.out' },
+    choicesTl.to(this.container, { opacity: 1, duration: 0.5 });
+
+    if (btn1) {
+      choicesTl.fromTo(
+        btn1,
+        { opacity: 0, x: -30, y: -20, scale: 0.88 },
+        { opacity: 1, x: 0, y: 0, scale: 1, duration: 0.9, ease: 'back.out(1.4)' },
         0
       );
+    }
+    if (btn2) {
+      choicesTl.fromTo(
+        btn2,
+        { opacity: 0, x: 30, y: -20, scale: 0.88 },
+        { opacity: 1, x: 0, y: 0, scale: 1, duration: 0.9, ease: 'back.out(1.4)' },
+        0.12
+      );
+    }
+    if (btn3) {
+      choicesTl.fromTo(
+        btn3,
+        { opacity: 0, y: 35, scale: 0.88 },
+        { opacity: 1, y: 0, scale: 1, duration: 0.9, ease: 'back.out(1.4)' },
+        0.24
+      );
+    }
   }
 
   showConfirmModal(choiceKey) {

@@ -55,46 +55,54 @@ export class Phase5Scene {
 
     el.innerHTML = `
       <div class="p5-main-stage" id="p5-main-stage">
-        <!-- 1. Heart Character & Spotlight Stage -->
-        <div class="p5-heart-stage" id="p5-heart-stage">
-          <div class="p5-heart-spotlight" id="p5-heart-spotlight"></div>
-          <div id="p5-heart-wrap"></div>
-        </div>
-
-        <!-- 2. Opening Reflection Box -->
+        <!-- 1. Opening Narrative & Prompt Text -->
         <div class="p5-narrative-box" id="p5-narrative-box">
           <p class="text-lyric" id="p5-nar-line" style="font-size: var(--text-lg); line-height: var(--leading-relaxed); opacity: 0;"></p>
         </div>
 
-        <!-- 3. Minimalist Aesthetic Choices -->
-        <div class="p5-choices-group" id="p5-choices-group" role="group" aria-label="Pilihan Arah Langkah">
-          <button class="p5-choice-btn choice-reconcile" id="btn-choice-reconcile" data-choice="reconcile" aria-label="Pilih: ${content.choices.reconcile.title} — ${content.choices.reconcile.description}" tabindex="0">
-            <span class="p5-choice-num">I</span>
-            <div class="p5-choice-content">
-              <span class="p5-choice-title">${content.choices.reconcile.title}</span>
-              <span class="p5-choice-desc">${content.choices.reconcile.description}</span>
-            </div>
-            <span class="p5-choice-spark">✦</span>
-          </button>
-          <button class="p5-choice-btn choice-wait" id="btn-choice-wait" data-choice="wait" aria-label="Pilih: ${content.choices.wait.title} — ${content.choices.wait.description}" tabindex="0">
-            <span class="p5-choice-num">II</span>
-            <div class="p5-choice-content">
-              <span class="p5-choice-title">${content.choices.wait.title}</span>
-              <span class="p5-choice-desc">${content.choices.wait.description}</span>
-            </div>
-            <span class="p5-choice-spark">✦</span>
-          </button>
-          <button class="p5-choice-btn choice-farewell" id="btn-choice-farewell" data-choice="farewell" aria-label="Pilih: ${content.choices.farewell.title} — ${content.choices.farewell.description}" tabindex="0">
-            <span class="p5-choice-num">III</span>
-            <div class="p5-choice-content">
-              <span class="p5-choice-title">${content.choices.farewell.title}</span>
-              <span class="p5-choice-desc">${content.choices.farewell.description}</span>
-            </div>
-            <span class="p5-choice-spark">✦</span>
-          </button>
+        <!-- 2. Orbital Decision Arena (Heart in Center, Choices Surrounding) -->
+        <div class="p5-decision-arena" id="p5-decision-arena">
+          <!-- Heart Character & Spotlight Stage (Center) -->
+          <div class="p5-heart-stage" id="p5-heart-stage">
+            <div class="p5-heart-spotlight" id="p5-heart-spotlight"></div>
+            <div id="p5-heart-wrap"></div>
+          </div>
+
+          <!-- Choices Group Surrounding Heart (Top-Left, Top-Right, Bottom) -->
+          <div class="p5-choices-group" id="p5-choices-group" role="group" aria-label="Pilihan Arah Langkah">
+            <!-- Pilihan 1: Kiri Atas Heart -->
+            <button class="p5-choice-btn choice-reconcile pos-top-left" id="btn-choice-reconcile" data-choice="reconcile" aria-label="Pilih: ${content.choices.reconcile.title} — ${content.choices.reconcile.description}" tabindex="0">
+              <span class="p5-choice-num">I</span>
+              <div class="p5-choice-content">
+                <span class="p5-choice-title">${content.choices.reconcile.title}</span>
+                <span class="p5-choice-desc">${content.choices.reconcile.description}</span>
+              </div>
+              <span class="p5-choice-spark">✦</span>
+            </button>
+
+            <!-- Pilihan 2: Kanan Atas Heart -->
+            <button class="p5-choice-btn choice-wait pos-top-right" id="btn-choice-wait" data-choice="wait" aria-label="Pilih: ${content.choices.wait.title} — ${content.choices.wait.description}" tabindex="0">
+              <span class="p5-choice-num">II</span>
+              <div class="p5-choice-content">
+                <span class="p5-choice-title">${content.choices.wait.title}</span>
+                <span class="p5-choice-desc">${content.choices.wait.description}</span>
+              </div>
+              <span class="p5-choice-spark">✦</span>
+            </button>
+
+            <!-- Pilihan 3: Bawah Heart -->
+            <button class="p5-choice-btn choice-farewell pos-bottom-center" id="btn-choice-farewell" data-choice="farewell" aria-label="Pilih: ${content.choices.farewell.title} — ${content.choices.farewell.description}" tabindex="0">
+              <span class="p5-choice-num">III</span>
+              <div class="p5-choice-content">
+                <span class="p5-choice-title">${content.choices.farewell.title}</span>
+                <span class="p5-choice-desc">${content.choices.farewell.description}</span>
+              </div>
+              <span class="p5-choice-spark">✦</span>
+            </button>
+          </div>
         </div>
 
-        <!-- 4. Minimalist Aesthetic Confirmation Dialogue Overlay -->
+        <!-- 3. Minimalist Aesthetic Confirmation Dialogue Overlay -->
         <div class="p5-confirm-overlay" id="p5-confirm-overlay" role="dialog" aria-modal="true" aria-labelledby="p5-confirm-question">
           <div class="p5-confirm-modal" id="p5-confirm-modal">
             <div class="p5-confirm-header">
