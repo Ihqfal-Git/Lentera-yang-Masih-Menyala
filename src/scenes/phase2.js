@@ -46,13 +46,13 @@ export class Phase2Scene {
         </p>
       </div>
 
-      <!-- 2. Memory Cards Deck Container -->
-      <div class="phase2-memories-container" id="p2-memories-stage" style="position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 14;"></div>
+      <!-- 2. Memory Cards Deck Container (z-index 20 above nav-layer z-index 14) -->
+      <div class="phase2-memories-container" id="p2-memories-stage" style="position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 20;"></div>
 
       <!-- 2b. Interactive Navigation Zones -->
       <div class="memory-nav-layer" id="p2-nav-layer" aria-label="Navigasi Kartu Kenangan (Ketuk atau Geser Layar)">
         <button class="memory-nav-zone zone-left is-disabled" id="p2-nav-prev" aria-label="Kartu Sebelumnya" tabindex="0"></button>
-        <button class="memory-nav-zone zone-right" id="p2-nav-next" aria-label="Kartu Selanjutnya" tabindex="0"></button>
+        <button class="memory-nav-zone zone-right is-disabled is-locked" id="p2-nav-next" aria-label="Kartu Selanjutnya" tabindex="0"></button>
       </div>
 
       <!-- 3. Interactive Environment & Blooming Flower -->

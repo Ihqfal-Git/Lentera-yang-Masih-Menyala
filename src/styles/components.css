@@ -532,13 +532,13 @@
   transform: translate(-16px, -12px) rotate(-2.5deg);
 }
 
-/* Memory Navigation Layer (Interactive Left & Right Side Zones - No Center Overlap) */
+/* Memory Navigation Layer (Interactive Left & Right Side Zones - Behind Card) */
 .memory-nav-layer {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
-  z-index: 18;
+  z-index: 14;
   display: flex;
   justify-content: space-between;
   pointer-events: none;
@@ -556,7 +556,7 @@
   position: relative;
   height: 100%;
   width: calc(50vw - 180px);
-  min-width: 50px;
+  min-width: 48px;
   max-width: 280px;
   pointer-events: auto;
   cursor: pointer;
@@ -566,7 +566,7 @@
   background: transparent;
   border: none;
   padding: 0;
-  z-index: 18;
+  z-index: 15;
   transition: opacity 0.3s ease, filter 0.3s ease;
 }
 
@@ -604,13 +604,39 @@
 /* =========================================================
    Memory Clarify Trigger & Water Ripple Wave Effects
    ========================================================= */
+.phase2-memories-container {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 20;
+}
+
+.memory-fragment {
+  pointer-events: none;
+}
+
+.memory-card-inner {
+  pointer-events: none;
+}
+
+.memory-frame-wrapper {
+  pointer-events: none;
+}
+
 .memory-photo-frame {
   cursor: pointer;
+  pointer-events: auto !important;
+  z-index: 22;
 }
 
 .memory-clarify-trigger {
   user-select: none;
   -webkit-user-select: none;
+  pointer-events: auto !important;
+  cursor: pointer;
+  z-index: 24;
 }
 
 .clarify-beacon {

@@ -47,10 +47,10 @@ export class MemoryCard {
     `;
 
     wrapper.innerHTML = `
-      <div class="memory-card-inner" style="position: relative; display: flex; flex-direction: column; align-items: center; max-width: min(82vw, 340px); width: 100%;">
+      <div class="memory-card-inner" style="position: relative; display: flex; flex-direction: column; align-items: center; max-width: min(82vw, 340px); width: 100%; pointer-events: none;">
         
         <!-- Photo Frame Wrapper (holds photo & peeking glow shadows) -->
-        <div class="memory-frame-wrapper" style="position: relative; width: 100%; aspect-ratio: ${this.aspectRatio};">
+        <div class="memory-frame-wrapper" style="position: relative; width: 100%; aspect-ratio: ${this.aspectRatio}; pointer-events: none;">
           
           <!-- Peeking Glow Left (active when hovering/dragging left zone) -->
           <div class="memory-peeking-glow glow-left" aria-hidden="true"></div>
@@ -58,11 +58,11 @@ export class MemoryCard {
           <!-- Peeking Glow Right (active when hovering/dragging right zone) -->
           <div class="memory-peeking-glow glow-right" aria-hidden="true"></div>
 
-          <!-- The Main Photo Frame (moves during drag and card shuffle) -->
-          <div class="memory-photo-frame" style="position: relative; width: 100%; height: 100%; border-radius: 16px; overflow: hidden; background: linear-gradient(145deg, rgba(255,255,255,0.07) 0%, rgba(20,15,30,0.8) 100%); border: 1px solid rgba(255, 255, 255, 0.12); box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55), 0 0 30px rgba(242, 203, 134, 0.08); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); z-index: 2; will-change: transform, opacity, filter;">
+          <!-- The Main Photo Frame (moves during drag and card shuffle, receives taps) -->
+          <div class="memory-photo-frame" style="position: relative; width: 100%; height: 100%; border-radius: 16px; overflow: hidden; background: linear-gradient(145deg, rgba(255,255,255,0.07) 0%, rgba(20,15,30,0.8) 100%); border: 1px solid rgba(255, 255, 255, 0.12); box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55), 0 0 30px rgba(242, 203, 134, 0.08); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); z-index: 22; pointer-events: auto; cursor: pointer; will-change: transform, opacity, filter;">
             
             <!-- Artistic Placeholder Backdrop (shown if photo is missing) -->
-            <div class="memory-placeholder-art" style="position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; background: radial-gradient(circle at 50% 40%, rgba(247, 169, 136, 0.18) 0%, rgba(30, 20, 45, 0.85) 80%); color: var(--accent-gold); padding: 1.5rem; text-align: center;">
+            <div class="memory-placeholder-art" style="position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; background: radial-gradient(circle at 50% 40%, rgba(247, 169, 136, 0.18) 0%, rgba(30, 20, 45, 0.85) 80%); color: var(--accent-gold); padding: 1.5rem; text-align: center; pointer-events: none;">
               <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.55; margin-bottom: 0.75rem;">
                 <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
                 <circle cx="8.5" cy="8.5" r="1.5"></circle>
@@ -72,13 +72,13 @@ export class MemoryCard {
             </div>
 
             <!-- The Real Partner Photo (starts blurred until tapped) -->
-            <img class="memory-img" src="${this.imageSrc}" alt="Potret dalam ingatan" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 25%; opacity: 0; filter: blur(18px) brightness(0.82); transform: scale(1.08); will-change: filter, transform, opacity;" loading="eager" />
+            <img class="memory-img" src="${this.imageSrc}" alt="Potret dalam ingatan" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 25%; opacity: 0; filter: blur(18px) brightness(0.82); transform: scale(1.08); pointer-events: none; will-change: filter, transform, opacity;" loading="eager" />
             
             <!-- Dynamic Water Ripples Container -->
-            <div class="memory-water-ripples-container" aria-hidden="true" style="position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 8;"></div>
+            <div class="memory-water-ripples-container" aria-hidden="true" style="position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 23;"></div>
 
             <!-- Central Interactive Clarify Trigger -->
-            <button class="memory-clarify-trigger" type="button" aria-label="Ketuk foto untuk menjernihkan ingatan" tabindex="0" style="position: absolute; inset: 0; width: 100%; height: 100%; background: transparent; border: none; padding: 0; margin: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10; cursor: pointer; -webkit-tap-highlight-color: transparent; outline: none; touch-action: manipulation;">
+            <button class="memory-clarify-trigger" type="button" aria-label="Ketuk foto untuk menjernihkan ingatan" tabindex="0" style="position: absolute; inset: 0; width: 100%; height: 100%; background: transparent; border: none; padding: 0; margin: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 24; cursor: pointer; pointer-events: auto; -webkit-tap-highlight-color: transparent; outline: none; touch-action: manipulation;">
               <div class="clarify-beacon">
                 <div class="clarify-ripple-ring ring-1"></div>
                 <div class="clarify-ripple-ring ring-2"></div>
@@ -98,7 +98,7 @@ export class MemoryCard {
         </div>
 
         <!-- Poetic Caption Container (starts hidden until unblurred) -->
-        <div class="memory-caption-wrapper" style="margin-top: var(--space-lg); text-align: center; max-width: 480px; z-index: 2; opacity: 0; visibility: hidden; filter: blur(8px); transform: translateY(14px); will-change: transform, opacity, filter;">
+        <div class="memory-caption-wrapper" style="margin-top: var(--space-lg); text-align: center; max-width: 480px; z-index: 2; opacity: 0; visibility: hidden; filter: blur(8px); transform: translateY(14px); pointer-events: none; will-change: transform, opacity, filter;">
           <p class="memory-caption text-lyric" style="font-size: var(--text-base); line-height: var(--leading-relaxed); color: var(--text-primary); text-shadow: 0 2px 12px rgba(0,0,0,0.5);">
             "${this.caption}"
           </p>
@@ -140,21 +140,31 @@ export class MemoryCard {
    * Bind clarify center tap listener
    */
   bindClarifyTrigger(wrapper) {
+    const photoFrame = wrapper.querySelector('.memory-photo-frame');
     const triggerBtn = wrapper.querySelector('.memory-clarify-trigger');
-    if (!triggerBtn) return;
+    if (!photoFrame) return;
 
     this.handleClarifyClick = (e) => {
       e.stopPropagation();
       if (this.isClarified) return;
 
-      const rect = triggerBtn.getBoundingClientRect();
-      const clickX = e.clientX ? e.clientX - rect.left : rect.width / 2;
-      const clickY = e.clientY ? e.clientY - rect.top : rect.height / 2;
+      const rect = photoFrame.getBoundingClientRect();
+      let clickX = rect.width / 2;
+      let clickY = rect.height / 2;
+
+      if (e.clientX && e.clientY) {
+        clickX = e.clientX - rect.left;
+        clickY = e.clientY - rect.top;
+      }
 
       this.clarify(clickX, clickY);
     };
 
-    triggerBtn.addEventListener('click', this.handleClarifyClick);
+    // Attach to both photoFrame and triggerBtn for 100% tap hit reliability
+    photoFrame.addEventListener('click', this.handleClarifyClick);
+    if (triggerBtn) {
+      triggerBtn.addEventListener('click', this.handleClarifyClick);
+    }
   }
 
   /**
@@ -288,6 +298,11 @@ export class MemoryCard {
     const img = this.element.querySelector('.memory-img');
     const triggerBtn = this.element.querySelector('.memory-clarify-trigger');
     const captionWrapper = this.element.querySelector('.memory-caption-wrapper');
+    const photoFrame = this.element.querySelector('.memory-photo-frame');
+
+    if (photoFrame) {
+      photoFrame.style.pointerEvents = 'auto';
+    }
 
     if (this.isClarified) {
       if (img) {
@@ -421,6 +436,10 @@ export class MemoryCard {
     this.element.style.pointerEvents = 'none';
     this.element.style.zIndex = '10';
 
+    if (photoFrame) {
+      photoFrame.style.pointerEvents = 'auto';
+    }
+
     this.syncClarificationVisuals();
 
     if (prefersReducedMotion) {
@@ -451,6 +470,10 @@ export class MemoryCard {
     const photoFrame = this.element.querySelector('.memory-photo-frame');
     const captionWrapper = this.element.querySelector('.memory-caption-wrapper');
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (photoFrame) {
+      photoFrame.style.pointerEvents = 'none';
+    }
 
     if (prefersReducedMotion) {
       gsap.set(this.element, { opacity: 0, visibility: 'hidden', zIndex: 1 });
@@ -516,6 +539,10 @@ export class MemoryCard {
 
     this.element.style.visibility = 'visible';
     this.element.style.zIndex = '10';
+
+    if (photoFrame) {
+      photoFrame.style.pointerEvents = 'auto';
+    }
 
     this.syncClarificationVisuals();
 
@@ -591,6 +618,10 @@ export class MemoryCard {
     const captionWrapper = this.element.querySelector('.memory-caption-wrapper');
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+    if (photoFrame) {
+      photoFrame.style.pointerEvents = 'none';
+    }
+
     if (prefersReducedMotion) {
       gsap.set(this.element, { opacity: 0, visibility: 'hidden', zIndex: 1 });
       return Promise.resolve();
@@ -655,6 +686,10 @@ export class MemoryCard {
 
     this.element.style.visibility = 'visible';
     this.element.style.zIndex = '10';
+
+    if (photoFrame) {
+      photoFrame.style.pointerEvents = 'auto';
+    }
 
     this.syncClarificationVisuals();
 
@@ -761,9 +796,11 @@ export class MemoryCard {
       this.timeline = null;
     }
 
+    const photoFrame = this.element ? this.element.querySelector('.memory-photo-frame') : null;
     const triggerBtn = this.element ? this.element.querySelector('.memory-clarify-trigger') : null;
-    if (triggerBtn && this.handleClarifyClick) {
-      triggerBtn.removeEventListener('click', this.handleClarifyClick);
+    if (this.handleClarifyClick) {
+      if (photoFrame) photoFrame.removeEventListener('click', this.handleClarifyClick);
+      if (triggerBtn) triggerBtn.removeEventListener('click', this.handleClarifyClick);
     }
 
     if (this.element && this.element.parentNode) {
