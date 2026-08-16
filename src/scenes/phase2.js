@@ -222,6 +222,16 @@ export class Phase2Scene {
     }
 
     // Reset sub-stages
+    const memStage = this.element.querySelector('#p2-memories-stage');
+    if (memStage) {
+      memStage.style.display = '';
+      memStage.style.pointerEvents = 'none';
+    }
+    const navLayer = this.element.querySelector('#p2-nav-layer');
+    if (navLayer) {
+      navLayer.style.display = '';
+      navLayer.style.pointerEvents = 'none';
+    }
     const transMonologue = this.element.querySelector('#p2-trans-monologue');
     if (transMonologue) {
       transMonologue.style.visibility = 'hidden';
@@ -323,7 +333,19 @@ export class Phase2Scene {
       transMonologue.style.pointerEvents = 'none';
     }
 
-    // 2. Reveal Floating Mosaic Wall of all 12 photos
+    // 2. Hide hero cards and nav layer to unload GPU memory before mosaic wall
+    const memStage = this.element.querySelector('#p2-memories-stage');
+    const navLayer = this.element.querySelector('#p2-nav-layer');
+    if (memStage) {
+      memStage.style.display = 'none';
+      memStage.style.pointerEvents = 'none';
+    }
+    if (navLayer) {
+      navLayer.style.display = 'none';
+      navLayer.style.pointerEvents = 'none';
+    }
+
+    // 3. Reveal Floating Mosaic Wall of all 12 photos
     if (this.mosaicWall) {
       await this.mosaicWall.reveal();
     }

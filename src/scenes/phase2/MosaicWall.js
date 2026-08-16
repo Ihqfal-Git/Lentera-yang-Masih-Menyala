@@ -291,37 +291,38 @@ export class MosaicWall {
 
     return new Promise(resolve => {
       this.timeline = gsap.timeline({ onComplete: resolve });
+      const isMobile = window.innerWidth <= 768;
 
       this.timeline
         .fromTo(
           this.element,
           { opacity: 0 },
-          { opacity: 1, duration: 0.8, ease: 'power2.out' }
+          { opacity: 1, duration: 0.5, ease: 'power1.out' }
         )
         .fromTo(
           header,
-          { opacity: 0, y: -16 },
-          { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out' },
-          '-=0.4'
+          { opacity: 0, y: -10 },
+          { opacity: 1, y: 0, duration: 0.5, ease: 'power1.out' },
+          '-=0.2'
         )
         .fromTo(
           items,
-          { opacity: 0, scale: 0.75, y: 30 },
+          { opacity: 0, scale: isMobile ? 0.95 : 0.88, y: isMobile ? 12 : 20 },
           {
             opacity: 1,
             scale: 1,
             y: 0,
-            duration: 0.75,
-            stagger: 0.06,
-            ease: 'back.out(1.3)',
+            duration: isMobile ? 0.45 : 0.6,
+            stagger: isMobile ? 0.025 : 0.04,
+            ease: 'power2.out',
           },
-          '-=0.5'
+          '-=0.3'
         )
         .fromTo(
           footer,
-          { opacity: 0, y: 15 },
-          { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out' },
-          '-=0.3'
+          { opacity: 0, y: 10 },
+          { opacity: 1, y: 0, duration: 0.45, ease: 'power1.out' },
+          '-=0.2'
         );
     });
   }
