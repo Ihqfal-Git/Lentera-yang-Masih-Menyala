@@ -401,15 +401,24 @@ export class Phase5Scene {
 
     // Smoothly animate Heart back up from center (50%) to upper position (14%) for all endings
     const heartStage = this.element.querySelector('#p5-heart-stage');
+    const heartSpotlight = this.element.querySelector('#p5-heart-spotlight');
     if (heartStage) {
       const isMobile = window.innerWidth <= 600;
       await new Promise(resolve => {
-        gsap.to(heartStage, {
+        const tl = gsap.timeline({ onComplete: resolve });
+        tl.to(heartStage, {
           top: isMobile ? '12%' : '14%',
-          duration: 0.95,
-          ease: 'power2.inOut',
-          onComplete: resolve,
-        });
+          duration: 1.25,
+          ease: 'power3.inOut',
+        }, 0);
+        if (heartSpotlight) {
+          tl.to(heartSpotlight, {
+            scale: 1.15,
+            opacity: 0.9,
+            duration: 1.25,
+            ease: 'power3.inOut',
+          }, 0);
+        }
       });
     }
 
