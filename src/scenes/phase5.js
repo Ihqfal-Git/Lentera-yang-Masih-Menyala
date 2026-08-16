@@ -71,32 +71,23 @@ export class Phase5Scene {
           <!-- Choices Group Surrounding Heart (Top-Left, Top-Right, Bottom) -->
           <div class="p5-choices-group" id="p5-choices-group" role="group" aria-label="Pilihan Arah Langkah">
             <!-- Pilihan 1: Kiri Atas Heart -->
-            <button class="p5-choice-btn choice-reconcile pos-top-left" id="btn-choice-reconcile" data-choice="reconcile" aria-label="Pilih: ${content.choices.reconcile.title} — ${content.choices.reconcile.description}" tabindex="0">
+            <button class="p5-choice-btn choice-reconcile pos-top-left" id="btn-choice-reconcile" data-choice="reconcile" aria-label="Pilih: ${content.choices.reconcile.title}" tabindex="0">
               <span class="p5-choice-num">I</span>
-              <div class="p5-choice-content">
-                <span class="p5-choice-title">${content.choices.reconcile.title}</span>
-                <span class="p5-choice-desc">${content.choices.reconcile.description}</span>
-              </div>
+              <span class="p5-choice-title">${content.choices.reconcile.title}</span>
               <span class="p5-choice-spark">✦</span>
             </button>
 
             <!-- Pilihan 2: Kanan Atas Heart -->
-            <button class="p5-choice-btn choice-wait pos-top-right" id="btn-choice-wait" data-choice="wait" aria-label="Pilih: ${content.choices.wait.title} — ${content.choices.wait.description}" tabindex="0">
+            <button class="p5-choice-btn choice-wait pos-top-right" id="btn-choice-wait" data-choice="wait" aria-label="Pilih: ${content.choices.wait.title}" tabindex="0">
               <span class="p5-choice-num">II</span>
-              <div class="p5-choice-content">
-                <span class="p5-choice-title">${content.choices.wait.title}</span>
-                <span class="p5-choice-desc">${content.choices.wait.description}</span>
-              </div>
+              <span class="p5-choice-title">${content.choices.wait.title}</span>
               <span class="p5-choice-spark">✦</span>
             </button>
 
             <!-- Pilihan 3: Bawah Heart -->
-            <button class="p5-choice-btn choice-farewell pos-bottom-center" id="btn-choice-farewell" data-choice="farewell" aria-label="Pilih: ${content.choices.farewell.title} — ${content.choices.farewell.description}" tabindex="0">
+            <button class="p5-choice-btn choice-farewell pos-bottom-center" id="btn-choice-farewell" data-choice="farewell" aria-label="Pilih: ${content.choices.farewell.title}" tabindex="0">
               <span class="p5-choice-num">III</span>
-              <div class="p5-choice-content">
-                <span class="p5-choice-title">${content.choices.farewell.title}</span>
-                <span class="p5-choice-desc">${content.choices.farewell.description}</span>
-              </div>
+              <span class="p5-choice-title">${content.choices.farewell.title}</span>
               <span class="p5-choice-spark">✦</span>
             </button>
           </div>
@@ -256,6 +247,11 @@ export class Phase5Scene {
     const content = STORY_CONTENT.phase5;
 
     // Reset stages for clean replay loop
+    const heartStage = this.element.querySelector('#p5-heart-stage');
+    if (heartStage) {
+      gsap.set(heartStage, { top: '50%' });
+    }
+
     const choicesGroup = this.element.querySelector('#p5-choices-group');
     const confirmOverlay = this.element.querySelector('#p5-confirm-overlay');
     const lyricsStage = this.element.querySelector('#p5-lyrics-stage');
@@ -400,7 +396,21 @@ export class Phase5Scene {
     // Narrative box fade out
     const narBox = this.element.querySelector('#p5-narrative-box');
     if (narBox) {
-      gsap.to(narBox, { opacity: 0, duration: 0.8 });
+      gsap.to(narBox, { opacity: 0, duration: 0.6 });
+    }
+
+    // Smoothly animate Heart back up from center (50%) to upper position (14%) for all endings
+    const heartStage = this.element.querySelector('#p5-heart-stage');
+    if (heartStage) {
+      const isMobile = window.innerWidth <= 600;
+      await new Promise(resolve => {
+        gsap.to(heartStage, {
+          top: isMobile ? '12%' : '14%',
+          duration: 0.95,
+          ease: 'power2.inOut',
+          onComplete: resolve,
+        });
+      });
     }
 
     // Setup the 5-dot unique tactile interaction

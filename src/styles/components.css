@@ -2159,52 +2159,54 @@
   pointer-events: auto;
 }
 
-/* Minimalist Aesthetic Choice Capsule */
+/* Minimalist Aesthetic Choice Capsule (Consistent Size & Balanced Pills) */
 .p5-choice-btn {
   position: absolute;
   pointer-events: auto;
-  padding: 12px 18px;
-  display: flex;
+  padding: 0 16px;
+  height: 46px;
+  display: inline-flex;
   flex-direction: row;
   align-items: center;
-  gap: 12px;
+  justify-content: space-between;
+  gap: 10px;
   background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 999px;
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   cursor: pointer;
   outline: none;
-  text-align: left;
+  text-align: center;
   user-select: none;
   touch-action: manipulation;
   box-shadow: 0 6px 22px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.18);
   transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease, background 0.35s ease, border-color 0.35s ease;
 }
 
-/* Positions Surrounding Heart */
+/* Positions Surrounding Heart (Equal Symmetrical Dimensions) */
 .p5-choice-btn.pos-top-left {
   left: 2%;
   top: 10%;
-  width: min(44vw, 245px);
+  width: min(42vw, 195px);
 }
 
 .p5-choice-btn.pos-top-right {
   right: 2%;
   top: 10%;
-  width: min(44vw, 245px);
+  width: min(42vw, 195px);
 }
 
 .p5-choice-btn.pos-bottom-center {
   left: 50%;
   bottom: 5%;
   transform: translateX(-50%);
-  width: min(86vw, 290px);
+  width: min(52vw, 205px);
 }
 
 @media (max-width: 580px) {
   .p5-decision-arena {
-    height: min(72vh, 470px);
+    height: min(70vh, 440px);
     width: 100%;
   }
 
@@ -2216,74 +2218,64 @@
     left: 0;
     top: 4%;
     width: 48%;
-    padding: 10px 12px;
-    gap: 8px;
+    height: 42px;
+    padding: 0 12px;
+    gap: 6px;
   }
 
   .p5-choice-btn.pos-top-right {
     right: 0;
     top: 4%;
     width: 48%;
-    padding: 10px 12px;
-    gap: 8px;
+    height: 42px;
+    padding: 0 12px;
+    gap: 6px;
   }
 
   .p5-choice-btn.pos-bottom-center {
     bottom: 5%;
-    width: 88%;
-    padding: 11px 16px;
-    gap: 12px;
+    width: 56%;
+    height: 42px;
+    padding: 0 14px;
+    gap: 8px;
   }
 
   .p5-choice-title {
-    font-size: 0.95rem !important;
+    font-size: 0.88rem !important;
   }
 
-  .p5-choice-desc {
-    font-size: 0.7rem !important;
+  .p5-choice-num {
+    font-size: 0.85rem !important;
   }
 }
 
 .p5-choice-num {
   font-family: var(--font-serif);
   font-style: italic;
-  font-size: 0.95rem;
+  font-size: 0.92rem;
   color: var(--accent-gold);
-  opacity: 0.8;
-  min-width: 20px;
+  opacity: 0.85;
+  min-width: 16px;
   text-align: center;
   transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
-.p5-choice-content {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-}
-
 .p5-choice-title {
   font-family: var(--font-serif);
-  font-size: clamp(0.98rem, 0.92rem + 0.3vw, 1.12rem);
+  font-size: clamp(0.92rem, 0.86rem + 0.25vw, 1.05rem);
   font-weight: 500;
   letter-spacing: 0.02em;
   color: #fff8e7;
+  flex: 1;
+  text-align: center;
+  white-space: nowrap;
   transition: color 0.3s ease, text-shadow 0.3s ease;
-}
-
-.p5-choice-desc {
-  font-family: var(--font-serif);
-  font-style: italic;
-  font-size: clamp(0.72rem, 0.68rem + 0.15vw, 0.8rem);
-  color: rgba(255, 248, 231, 0.65);
-  letter-spacing: 0.02em;
-  margin-top: 1px;
-  transition: color 0.3s ease;
 }
 
 .p5-choice-spark {
   font-size: 0.75rem;
   color: var(--accent-gold);
-  opacity: 0.4;
+  opacity: 0.45;
   transition: all 0.35s ease;
 }
 
@@ -2480,7 +2472,7 @@
 /* Ending Narrative Stage: Positioned cleanly BELOW the Heart character */
 .p5-ending-stage {
   position: absolute;
-  top: 50%;
+  top: 36%;
   left: 0;
   right: 0;
   bottom: 0;
@@ -2642,10 +2634,10 @@
   transform: translateY(-2px);
 }
 
-/* Synchronized Song Lyrics Stage */
+/* Synchronized Song Lyrics Stage (Positioned Cleanly Below Heart) */
 .p5-lyrics-stage {
   position: absolute;
-  top: 46%;
+  top: 36%;
   left: 0;
   right: 0;
   bottom: 0;
