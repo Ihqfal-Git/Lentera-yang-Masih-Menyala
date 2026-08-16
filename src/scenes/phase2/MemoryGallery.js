@@ -4,8 +4,12 @@ import { STORY_CONTENT } from '../../data/storyContent.js';
 
 /**
  * MemoryGallery Sub-Component (Phase 2)
- * Manages the stack of 3 Polaroid memory cards, touch swipe gestures,
- * keyboard controls, peeking idle cues, and navigation zones.
+ * Manages:
+ * 1. Stack of 3 Polaroid memory cards with water ripple unblur interaction
+ * 2. Mandatory unblur requirement on Card 0 before allowing skip/next
+ * 3. Free skipping on Card 1 and Card 2 (caption only shows if clarified)
+ * 4. Persistent clarification state across next/prev navigation
+ * 5. Distinct touch zones without overlapping center card tap area
  */
 export class MemoryGallery {
   constructor(options = {}) {
@@ -41,18 +45,36 @@ export class MemoryGallery {
   mount() {
     if (!this.container) return;
 
-    this.cards = STORY_CONTENT.phase2.memories.map((mem) => {
+    this.cards = STORY_CONTENT.phase2.memories.map((mem, index) => {
       return new MemoryCard({
+        index: index,
         container: this.container,
         imageSrc: mem.imageSrc,
         caption: mem.caption,
         captionSecondary: mem.captionSecondary,
         aspectRatio: '4 / 5',
+        onClarified: (idx) => this.handleCardClarified(idx),
       });
     });
 
     this.cards.forEach(card => card.render());
     this.bindNavigation();
+  }
+
+  handleCardClarified(idx) {
+    if (idx === 0) {
+      // Unlock navigation for the 1st card
+      this.updateNavZones();
+
+      // Gentle glow pulse on the next button to indicate it's now unlocked
+      const btnNext = this.navContainer ? this.navContainer.querySelector('#p2-nav-next') : null;
+      if (btnNext) {
+        btnNext.classList.add('is-unlocked-pulse');
+        setTimeout(() => {
+          if (btnNext) btnNext.classList.remove('is-unlocked-pulse');
+        }, 1200);
+      }
+    }
   }
 
   bindNavigation() {
@@ -89,6 +111,7 @@ export class MemoryGallery {
       };
       this.handleNextMouseEnter = () => {
         if (this.isNavigating || this.isFinished) return;
+        if (this.currentIndex === 0 && !this.cards[0].isClarified) return;
         const card = this.cards[this.currentIndex];
         if (card) card.setHoverState('right');
       };
@@ -126,7 +149,12 @@ export class MemoryGallery {
 
       const activeCard = this.cards[this.currentIndex];
       if (activeCard) {
-        activeCard.setLiveDragOffset(this.touchDeltaX);
+        // If on card 0 and not yet clarified, resist left swipe
+        if (this.currentIndex === 0 && !activeCard.isClarified && this.touchDeltaX < 0) {
+          activeCard.setLiveDragOffset(this.touchDeltaX * 0.25);
+        } else {
+          activeCard.setLiveDragOffset(this.touchDeltaX);
+        }
       }
     };
 
@@ -138,7 +166,7 @@ export class MemoryGallery {
       const threshold = 35;
 
       if (this.touchDeltaX < -threshold) {
-        // Swipe Left -> Next Card
+        // Swipe Left -> Next Card (checks validation in nextCard)
         this.nextCard();
       } else if (this.touchDeltaX > threshold) {
         // Swipe Right -> Prev Card
@@ -187,6 +215,11 @@ export class MemoryGallery {
     this.stopCardIdleTimer();
     this.cardIdleInterval = setInterval(() => {
       if (this.isNavigating || this.isFinished) return;
+      if (this.currentIndex === 0 && !this.cards[0].isClarified) {
+        // On card 0, pulse clarify cue if user is idle
+        if (this.cards[0]) this.cards[0].pulseClarifyCue();
+        return;
+      }
       if (this.cards[this.currentIndex]) {
         this.cards[this.currentIndex].playIdlePeekCue('right');
       }
@@ -213,10 +246,25 @@ export class MemoryGallery {
     }
 
     if (btnNext) {
-      if (this.currentIndex >= this.cards.length - 1) {
+      if (this.currentIndex === 0) {
+        if (!this.cards[0].isClarified) {
+          btnNext.classList.add('is-locked', 'is-disabled');
+          btnNext.setAttribute('aria-disabled', 'true');
+          btnNext.setAttribute('title', 'Ketuk foto untuk menjernihkan ingatan terlebih dahulu');
+        } else {
+          btnNext.classList.remove('is-locked', 'is-disabled', 'is-final');
+          btnNext.removeAttribute('aria-disabled');
+          btnNext.removeAttribute('title');
+        }
+      } else if (this.currentIndex >= this.cards.length - 1) {
+        btnNext.classList.remove('is-locked', 'is-disabled');
         btnNext.classList.add('is-final');
+        btnNext.removeAttribute('aria-disabled');
+        btnNext.removeAttribute('title');
       } else {
-        btnNext.classList.remove('is-final');
+        btnNext.classList.remove('is-locked', 'is-disabled', 'is-final');
+        btnNext.removeAttribute('aria-disabled');
+        btnNext.removeAttribute('title');
       }
     }
   }
@@ -226,6 +274,13 @@ export class MemoryGallery {
     this.stopCardIdleTimer();
 
     const currCard = this.cards[this.currentIndex];
+
+    // Card 0 constraint: User MUST unblur before proceeding!
+    if (this.currentIndex === 0 && !currCard.isClarified) {
+      currCard.resetLiveDrag();
+      currCard.pulseClarifyCue();
+      return;
+    }
 
     // If on the 3rd/last card, advance out of photos to blooming flower
     if (this.currentIndex >= this.cards.length - 1) {

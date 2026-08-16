@@ -736,6 +736,54 @@ export class AudioManager {
   }
 
   /**
+   * Delicate water ripple drop sound & crystalline harmonics for memory unblurring
+   */
+  playWaterRipple(volume = 0.35) {
+    if (this.isMuted) return;
+    const ctx = this.getAudioContext();
+    if (!ctx) return;
+
+    try {
+      const now = ctx.currentTime;
+      
+      // 1. Water drop resonant sine pitch plunge
+      const osc = ctx.createOscillator();
+      const oscGain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(440, now);
+      osc.frequency.exponentialRampToValueAtTime(880, now + 0.07);
+      osc.frequency.exponentialRampToValueAtTime(580, now + 0.28);
+
+      oscGain.gain.setValueAtTime(0, now);
+      oscGain.gain.linearRampToValueAtTime(volume * 0.4, now + 0.02);
+      oscGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.32);
+
+      osc.connect(oscGain);
+      oscGain.connect(ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.32);
+
+      // 2. Crystal harmonics ripple chime
+      [880, 1318.5, 1760].forEach((freq, i) => {
+        const hOsc = ctx.createOscillator();
+        const hGain = ctx.createGain();
+        const start = now + 0.05 + i * 0.035;
+        hOsc.type = 'sine';
+        hOsc.frequency.setValueAtTime(freq, start);
+
+        hGain.gain.setValueAtTime(0, start);
+        hGain.gain.linearRampToValueAtTime(volume * 0.18, start + 0.02);
+        hGain.gain.exponentialRampToValueAtTime(0.0001, start + 0.42);
+
+        hOsc.connect(hGain);
+        hGain.connect(ctx.destination);
+        hOsc.start(start);
+        hOsc.stop(start + 0.42);
+      });
+    } catch (e) { }
+  }
+
+  /**
    * Deep, warm organic double heartbeat sound (lub-dub)
    * Supports dynamic mood variations (hopeful/fast, neutral/steady, sad/slow)
    */

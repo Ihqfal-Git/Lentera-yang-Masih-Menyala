@@ -1,30 +1,37 @@
 import gsap from 'gsap';
+import { audioManager } from '../audio/audioManager.js';
 
 /**
  * MemoryCard Component
- * Displays partner memory photo with 3D depth deck-shuffling physics:
- * - Swipe Left (NEXT): Active card sweeps to LEFT, drops into CENTER-BACK.
- *   Next card emerges from CENTER-BACK, swings slightly RIGHT, and swoops forward into FRONT.
- * - Swipe Right (PREV): Active card sweeps to RIGHT, drops into CENTER-BACK.
- *   Previous card emerges from CENTER-BACK, swings slightly LEFT, and swoops forward into FRONT.
+ * Displays partner memory photo with:
+ * 1. Initial atmospheric blur state & hidden caption
+ * 2. Center tap target to trigger dynamic water ripple waves, crystal sound, and unblur transition
+ * 3. 3D depth deck-shuffling physics on swipe/click navigation
+ * 4. Persistent clarification state across next/prev navigation
  */
 export class MemoryCard {
   constructor(options = {}) {
     this.container = options.container || null;
     this.element = null;
+    this.index = options.index || 0;
     this.imageSrc = options.imageSrc || '/assets/memories/photo-01.webp';
     this.caption = options.caption || '';
     this.captionSecondary = options.captionSecondary || null;
     this.aspectRatio = options.aspectRatio || '4 / 5';
+    this.onClarified = options.onClarified || (() => {});
+
+    // State
+    this.isClarified = false;
     this.timeline = null;
+    this.handleClarifyClick = null;
   }
 
   render() {
     if (this.element) return this.element;
 
     const wrapper = document.createElement('article');
-    wrapper.className = 'memory-fragment';
-    wrapper.setAttribute('aria-label', 'Fragmen Ingatan');
+    wrapper.className = `memory-fragment card-idx-${this.index}`;
+    wrapper.setAttribute('aria-label', `Fragmen Ingatan ${this.index + 1}`);
     wrapper.style.cssText = `
       position: absolute;
       inset: 0;
@@ -64,16 +71,34 @@ export class MemoryCard {
               <span style="font-family: var(--font-serif); font-size: var(--text-sm); font-style: italic; opacity: 0.7; letter-spacing: var(--tracking-wide);">Potret Sosok dalam Ingatan</span>
             </div>
 
-            <!-- The Real Partner Photo -->
-            <img class="memory-img" src="${this.imageSrc}" alt="Potret dalam ingatan" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 25%; opacity: 0; transition: opacity 0.8s ease;" loading="eager" />
+            <!-- The Real Partner Photo (starts blurred until tapped) -->
+            <img class="memory-img" src="${this.imageSrc}" alt="Potret dalam ingatan" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 25%; opacity: 0; filter: blur(18px) brightness(0.82); transform: scale(1.08); will-change: filter, transform, opacity;" loading="eager" />
             
+            <!-- Dynamic Water Ripples Container -->
+            <div class="memory-water-ripples-container" aria-hidden="true" style="position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 8;"></div>
+
+            <!-- Central Interactive Clarify Trigger -->
+            <button class="memory-clarify-trigger" type="button" aria-label="Ketuk foto untuk menjernihkan ingatan" tabindex="0" style="position: absolute; inset: 0; width: 100%; height: 100%; background: transparent; border: none; padding: 0; margin: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10; cursor: pointer; -webkit-tap-highlight-color: transparent; outline: none; touch-action: manipulation;">
+              <div class="clarify-beacon">
+                <div class="clarify-ripple-ring ring-1"></div>
+                <div class="clarify-ripple-ring ring-2"></div>
+                <div class="clarify-icon-core">
+                  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                    <!-- Water droplet silhouette -->
+                    <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path>
+                  </svg>
+                </div>
+                <span class="clarify-label">Ketuk untuk menjernihkan</span>
+              </div>
+            </button>
+
             <!-- Soft Atmospheric Frame Vignette -->
-            <div class="memory-inner-vignette" style="position: absolute; inset: 0; background: radial-gradient(circle at center, transparent 60%, rgba(10, 8, 18, 0.45) 100%); pointer-events: none;"></div>
+            <div class="memory-inner-vignette" style="position: absolute; inset: 0; background: radial-gradient(circle at center, transparent 60%, rgba(10, 8, 18, 0.45) 100%); pointer-events: none; z-index: 4;"></div>
           </div>
         </div>
 
-        <!-- Poetic Caption Container -->
-        <div class="memory-caption-wrapper" style="margin-top: var(--space-lg); text-align: center; max-width: 480px; z-index: 2; will-change: transform, opacity;">
+        <!-- Poetic Caption Container (starts hidden until unblurred) -->
+        <div class="memory-caption-wrapper" style="margin-top: var(--space-lg); text-align: center; max-width: 480px; z-index: 2; opacity: 0; visibility: hidden; filter: blur(8px); transform: translateY(14px); will-change: transform, opacity, filter;">
           <p class="memory-caption text-lyric" style="font-size: var(--text-base); line-height: var(--leading-relaxed); color: var(--text-primary); text-shadow: 0 2px 12px rgba(0,0,0,0.5);">
             "${this.caption}"
           </p>
@@ -101,11 +126,199 @@ export class MemoryCard {
       };
     }
 
+    // Bind tap to clarify
+    this.bindClarifyTrigger(wrapper);
+
     this.element = wrapper;
     if (this.container) {
       this.container.appendChild(wrapper);
     }
     return this.element;
+  }
+
+  /**
+   * Bind clarify center tap listener
+   */
+  bindClarifyTrigger(wrapper) {
+    const triggerBtn = wrapper.querySelector('.memory-clarify-trigger');
+    if (!triggerBtn) return;
+
+    this.handleClarifyClick = (e) => {
+      e.stopPropagation();
+      if (this.isClarified) return;
+
+      const rect = triggerBtn.getBoundingClientRect();
+      const clickX = e.clientX ? e.clientX - rect.left : rect.width / 2;
+      const clickY = e.clientY ? e.clientY - rect.top : rect.height / 2;
+
+      this.clarify(clickX, clickY);
+    };
+
+    triggerBtn.addEventListener('click', this.handleClarifyClick);
+  }
+
+  /**
+   * Perform the water ripple clarify animation and reveal the caption
+   * @param {number} x - Relative X coordinate inside the photo frame
+   * @param {number} y - Relative Y coordinate inside the photo frame
+   */
+  clarify(x = null, y = null) {
+    if (this.isClarified || !this.element) return;
+    this.isClarified = true;
+
+    const photoFrame = this.element.querySelector('.memory-photo-frame');
+    const img = this.element.querySelector('.memory-img');
+    const triggerBtn = this.element.querySelector('.memory-clarify-trigger');
+    const captionWrapper = this.element.querySelector('.memory-caption-wrapper');
+    const ripplesContainer = this.element.querySelector('.memory-water-ripples-container');
+
+    // 1. Play crystal water drop sound effect
+    audioManager.playWaterRipple(0.38);
+
+    // 2. Spawn dynamic water ripple wave rings
+    if (ripplesContainer && photoFrame) {
+      const frameRect = photoFrame.getBoundingClientRect();
+      const originX = x !== null ? x : frameRect.width / 2;
+      const originY = y !== null ? y : frameRect.height / 2;
+
+      // Spawn 3 cascading concentric wave rings
+      for (let i = 0; i < 3; i++) {
+        const ripple = document.createElement('div');
+        ripple.className = `memory-water-ripple ring-wave-${i + 1}`;
+        ripple.style.cssText = `
+          position: absolute;
+          left: ${originX}px;
+          top: ${originY}px;
+          width: 24px;
+          height: 24px;
+          margin-left: -12px;
+          margin-top: -12px;
+          border-radius: 50%;
+          border: ${1.5 + i * 0.5}px solid rgba(255, 255, 255, 0.9);
+          background: radial-gradient(circle, rgba(242, 203, 134, 0.35) 0%, rgba(255, 255, 255, 0.12) 45%, transparent 70%);
+          box-shadow: 0 0 ${20 + i * 10}px rgba(242, 203, 134, 0.8), inset 0 0 15px rgba(255, 255, 255, 0.6);
+          pointer-events: none;
+          transform: scale(0.1);
+          opacity: 1;
+        `;
+        ripplesContainer.appendChild(ripple);
+
+        gsap.to(ripple, {
+          scale: 4.8 + i * 1.6,
+          opacity: 0,
+          duration: 1.25 + i * 0.25,
+          delay: i * 0.12,
+          ease: 'power2.out',
+          onComplete: () => {
+            if (ripple.parentNode) {
+              ripple.parentNode.removeChild(ripple);
+            }
+          },
+        });
+      }
+    }
+
+    // 3. Fade out and disable clarify button
+    if (triggerBtn) {
+      gsap.to(triggerBtn, {
+        opacity: 0,
+        scale: 0.75,
+        duration: 0.45,
+        ease: 'power2.in',
+        onComplete: () => {
+          triggerBtn.style.pointerEvents = 'none';
+          triggerBtn.style.visibility = 'hidden';
+        },
+      });
+    }
+
+    // 4. Smoothly clear photo blur & reset scale
+    if (img) {
+      gsap.to(img, {
+        filter: 'blur(0px) brightness(1)',
+        scale: 1.0,
+        duration: 0.95,
+        ease: 'power2.out',
+      });
+    }
+
+    // 5. Reveal poetic caption
+    if (captionWrapper) {
+      captionWrapper.style.visibility = 'visible';
+      captionWrapper.style.pointerEvents = 'auto';
+      gsap.fromTo(
+        captionWrapper,
+        { opacity: 0, y: 14, filter: 'blur(8px)' },
+        { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.85, delay: 0.15, ease: 'power2.out' }
+      );
+    }
+
+    // 6. Notify gallery that this card has been clarified
+    this.onClarified(this.index);
+  }
+
+  /**
+   * Pulse/shake cue to guide the user on Card 0 when they attempt to skip without unblurring
+   */
+  pulseClarifyCue() {
+    if (!this.element || this.isClarified) return;
+    const triggerBtn = this.element.querySelector('.memory-clarify-trigger');
+    const beacon = this.element.querySelector('.clarify-beacon');
+
+    if (beacon) {
+      gsap.fromTo(
+        beacon,
+        { scale: 1 },
+        {
+          scale: 1.22,
+          duration: 0.25,
+          yoyo: true,
+          repeat: 3,
+          ease: 'power2.inOut',
+        }
+      );
+    }
+  }
+
+  /**
+   * Synchronize visual state (blurred vs clarified) when emerging or switching
+   */
+  syncClarificationVisuals() {
+    if (!this.element) return;
+    const img = this.element.querySelector('.memory-img');
+    const triggerBtn = this.element.querySelector('.memory-clarify-trigger');
+    const captionWrapper = this.element.querySelector('.memory-caption-wrapper');
+
+    if (this.isClarified) {
+      if (img) {
+        gsap.set(img, { filter: 'blur(0px) brightness(1)', scale: 1.0, opacity: 1 });
+      }
+      if (triggerBtn) {
+        triggerBtn.style.opacity = '0';
+        triggerBtn.style.pointerEvents = 'none';
+        triggerBtn.style.visibility = 'hidden';
+      }
+      if (captionWrapper) {
+        captionWrapper.style.visibility = 'visible';
+        captionWrapper.style.pointerEvents = 'auto';
+        gsap.set(captionWrapper, { opacity: 1, y: 0, filter: 'blur(0px)' });
+      }
+    } else {
+      if (img) {
+        gsap.set(img, { filter: 'blur(18px) brightness(0.82)', scale: 1.08, opacity: 1 });
+      }
+      if (triggerBtn) {
+        triggerBtn.style.opacity = '1';
+        triggerBtn.style.pointerEvents = 'auto';
+        triggerBtn.style.visibility = 'visible';
+        gsap.set(triggerBtn, { opacity: 1, scale: 1 });
+      }
+      if (captionWrapper) {
+        captionWrapper.style.visibility = 'hidden';
+        captionWrapper.style.pointerEvents = 'none';
+        gsap.set(captionWrapper, { opacity: 0, y: 14, filter: 'blur(8px)' });
+      }
+    }
   }
 
   /**
@@ -202,17 +415,17 @@ export class MemoryCard {
     if (!this.element) return Promise.resolve();
 
     const photoFrame = this.element.querySelector('.memory-photo-frame');
-    const captionWrapper = this.element.querySelector('.memory-caption-wrapper');
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     this.element.style.visibility = 'visible';
     this.element.style.pointerEvents = 'none';
     this.element.style.zIndex = '10';
 
+    this.syncClarificationVisuals();
+
     if (prefersReducedMotion) {
       gsap.set(this.element, { opacity: 1 });
-      gsap.set(photoFrame, { scale: 1, filter: 'blur(0px)', x: 0, y: 0 });
-      gsap.set(captionWrapper, { opacity: 1, x: 0, y: 0, filter: 'blur(0px)' });
+      gsap.set(photoFrame, { scale: 1, x: 0, y: 0 });
       return Promise.resolve();
     }
 
@@ -222,14 +435,8 @@ export class MemoryCard {
         .set(this.element, { opacity: 1 })
         .fromTo(
           photoFrame,
-          { opacity: 0, scale: 1.05, filter: 'blur(14px)', y: 15, x: 0, rotation: 0 },
-          { opacity: 1, scale: 1, filter: 'blur(0px)', y: 0, x: 0, rotation: 0, duration: duration, ease: 'power2.out' }
-        )
-        .fromTo(
-          captionWrapper,
-          { opacity: 0, y: 12, filter: 'blur(8px)' },
-          { opacity: 1, y: 0, filter: 'blur(0px)', duration: duration * 0.85, ease: 'power2.out' },
-          `-=${duration * 0.45}`
+          { opacity: 0, scale: 1.05, y: 15, x: 0, rotation: 0 },
+          { opacity: 1, scale: 1, y: 0, x: 0, rotation: 0, duration: duration, ease: 'power2.out' }
         );
     });
   }
@@ -256,20 +463,22 @@ export class MemoryCard {
           this.element.style.zIndex = '2';
           this.element.style.visibility = 'hidden';
           if (photoFrame) {
-            gsap.set(photoFrame, { x: 0, rotation: 0, scale: 1, filter: 'blur(0px)', opacity: 1 });
+            gsap.set(photoFrame, { x: 0, rotation: 0, scale: 1, opacity: 1 });
           }
           resolve();
         },
       });
 
-      // 1. Caption dissolves
-      this.timeline.to(captionWrapper, {
-        opacity: 0,
-        y: -10,
-        filter: 'blur(6px)',
-        duration: duration * 0.35,
-        ease: 'power2.in',
-      }, 0);
+      // 1. Caption dissolves if it was visible
+      if (this.isClarified && captionWrapper) {
+        this.timeline.to(captionWrapper, {
+          opacity: 0,
+          y: -10,
+          filter: 'blur(6px)',
+          duration: duration * 0.35,
+          ease: 'power2.in',
+        }, 0);
+      }
 
       // 2. Active card slides out to the LEFT
       this.timeline.to(photoFrame, {
@@ -287,7 +496,6 @@ export class MemoryCard {
           x: 0,
           rotation: 0,
           scale: 0.88,
-          filter: 'blur(8px)',
           opacity: 0,
           duration: duration * 0.5,
           ease: 'power2.inOut',
@@ -309,10 +517,11 @@ export class MemoryCard {
     this.element.style.visibility = 'visible';
     this.element.style.zIndex = '10';
 
+    this.syncClarificationVisuals();
+
     if (prefersReducedMotion) {
       gsap.set(this.element, { opacity: 1, zIndex: 10 });
-      gsap.set(photoFrame, { x: 0, y: 0, scale: 1, filter: 'blur(0px)', opacity: 1 });
-      gsap.set(captionWrapper, { opacity: 1, y: 0, filter: 'blur(0px)' });
+      gsap.set(photoFrame, { x: 0, y: 0, scale: 1, opacity: 1 });
       return Promise.resolve();
     }
 
@@ -335,14 +544,12 @@ export class MemoryCard {
             rotation: 0,
             scale: 0.86,
             opacity: 0.25,
-            filter: 'blur(8px)',
           },
           {
             x: 60,
             rotation: 3.5,
             scale: 0.94,
             opacity: 0.85,
-            filter: 'blur(2px)',
             duration: duration * 0.48,
             ease: 'power2.out',
           },
@@ -355,18 +562,21 @@ export class MemoryCard {
             rotation: 0,
             scale: 1.0,
             opacity: 1,
-            filter: 'blur(0px)',
             duration: duration * 0.52,
             ease: 'power2.out',
           },
           `>-=0.05`
-        )
-        .fromTo(
+        );
+
+      // Emerge caption only if already clarified previously
+      if (this.isClarified && captionWrapper) {
+        this.timeline.fromTo(
           captionWrapper,
           { opacity: 0, y: 12, filter: 'blur(6px)' },
           { opacity: 1, y: 0, filter: 'blur(0px)', duration: duration * 0.7, ease: 'power2.out' },
           `-=${duration * 0.4}`
         );
+      }
     });
   }
 
@@ -392,20 +602,22 @@ export class MemoryCard {
           this.element.style.zIndex = '2';
           this.element.style.visibility = 'hidden';
           if (photoFrame) {
-            gsap.set(photoFrame, { x: 0, rotation: 0, scale: 1, filter: 'blur(0px)', opacity: 1 });
+            gsap.set(photoFrame, { x: 0, rotation: 0, scale: 1, opacity: 1 });
           }
           resolve();
         },
       });
 
-      // 1. Caption dissolves
-      this.timeline.to(captionWrapper, {
-        opacity: 0,
-        y: -10,
-        filter: 'blur(6px)',
-        duration: duration * 0.35,
-        ease: 'power2.in',
-      }, 0);
+      // 1. Caption dissolves if visible
+      if (this.isClarified && captionWrapper) {
+        this.timeline.to(captionWrapper, {
+          opacity: 0,
+          y: -10,
+          filter: 'blur(6px)',
+          duration: duration * 0.35,
+          ease: 'power2.in',
+        }, 0);
+      }
 
       // 2. Active card slides out to the RIGHT
       this.timeline.to(photoFrame, {
@@ -423,7 +635,6 @@ export class MemoryCard {
           x: 0,
           rotation: 0,
           scale: 0.88,
-          filter: 'blur(8px)',
           opacity: 0,
           duration: duration * 0.5,
           ease: 'power2.inOut',
@@ -445,10 +656,11 @@ export class MemoryCard {
     this.element.style.visibility = 'visible';
     this.element.style.zIndex = '10';
 
+    this.syncClarificationVisuals();
+
     if (prefersReducedMotion) {
       gsap.set(this.element, { opacity: 1, zIndex: 10 });
-      gsap.set(photoFrame, { x: 0, y: 0, scale: 1, filter: 'blur(0px)', opacity: 1 });
-      gsap.set(captionWrapper, { opacity: 1, y: 0, filter: 'blur(0px)' });
+      gsap.set(photoFrame, { x: 0, y: 0, scale: 1, opacity: 1 });
       return Promise.resolve();
     }
 
@@ -471,14 +683,12 @@ export class MemoryCard {
             rotation: 0,
             scale: 0.86,
             opacity: 0.25,
-            filter: 'blur(8px)',
           },
           {
             x: -60,
             rotation: -3.5,
             scale: 0.94,
             opacity: 0.85,
-            filter: 'blur(2px)',
             duration: duration * 0.48,
             ease: 'power2.out',
           },
@@ -491,36 +701,22 @@ export class MemoryCard {
             rotation: 0,
             scale: 1.0,
             opacity: 1,
-            filter: 'blur(0px)',
             duration: duration * 0.52,
             ease: 'power2.out',
           },
           `>-=0.05`
-        )
-        .fromTo(
+        );
+
+      // Emerge caption if clarified
+      if (this.isClarified && captionWrapper) {
+        this.timeline.fromTo(
           captionWrapper,
           { opacity: 0, y: 12, filter: 'blur(6px)' },
           { opacity: 1, y: 0, filter: 'blur(0px)', duration: duration * 0.7, ease: 'power2.out' },
           `-=${duration * 0.4}`
         );
+      }
     });
-  }
-
-  // Backward-compatible method aliases
-  shuffleToBack(duration = 0.75) {
-    return this.shuffleLeftToBack(duration);
-  }
-
-  settleAsFront(duration = 0.75) {
-    return this.emergeRightToFront(duration);
-  }
-
-  descendToBack(duration = 0.75) {
-    return this.shuffleRightToBack(duration);
-  }
-
-  shuffleToFront(duration = 0.75) {
-    return this.emergeLeftToFront(duration);
   }
 
   /**
@@ -564,6 +760,12 @@ export class MemoryCard {
       this.timeline.kill();
       this.timeline = null;
     }
+
+    const triggerBtn = this.element ? this.element.querySelector('.memory-clarify-trigger') : null;
+    if (triggerBtn && this.handleClarifyClick) {
+      triggerBtn.removeEventListener('click', this.handleClarifyClick);
+    }
+
     if (this.element && this.element.parentNode) {
       this.element.parentNode.removeChild(this.element);
       this.element = null;
