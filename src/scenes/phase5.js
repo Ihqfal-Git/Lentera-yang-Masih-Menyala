@@ -462,18 +462,28 @@ export class Phase5Scene {
     progressEl.className = `p5-interact-progress theme-${choiceKey}`;
     progressEl.style.visibility = 'visible';
 
-    // Dynamic atmospheric quotes based on chosen ending mood
+    // Initial action prompt for the very first touch
+    let initialPrompt = 'Sentuh layar';
+    if (choiceKey === 'reconcile') {
+      initialPrompt = 'Sentuh layar';
+    } else if (choiceKey === 'wait') {
+      initialPrompt = 'Sentuh kupu-kupu';
+    } else if (choiceKey === 'farewell') {
+      initialPrompt = 'Sentuh lentera hati';
+    }
+
+    // Dynamic atmospheric quotes for subsequent progressive steps
     const choiceData = STORY_CONTENT.phase5.choices[choiceKey];
     const quotes = (choiceData && choiceData.moodQuotes) ? choiceData.moodQuotes : [
-      'Dengarkan alunannya sejenak...',
-      'Setiap rasa menemukan ruangnya...',
-      'Di antara aksara dan jeda...',
-      'Semoga langkahmu dipeluk tenang...',
-      'Terima kasih telah membersamai kisah ini...',
+      'Menyapa kembali hening yang sempat ada...',
+      'Ada senyum yang tak pernah pudar...',
+      'Setiap kata menemukan arah pulangnya...',
+      'Langkah kita kembali bersisian...',
+      'Di antara jeda, kita saling menemukan...',
     ];
 
     if (hintEl) {
-      hintEl.textContent = quotes[0] || 'Dengarkan alunannya sejenak...';
+      hintEl.textContent = initialPrompt;
       hintEl.classList.remove('is-cooling-down');
     }
 
@@ -502,23 +512,23 @@ export class Phase5Scene {
         );
       }
 
-      // Smoothly cross-fade to the next poetic quote matching the heart's atmosphere
-      const nextQuote = quotes[this.interactionClicks] || quotes[quotes.length - 1];
-      if (hintEl) {
-        gsap.to(hintEl, {
-          opacity: 0,
-          y: -4,
-          duration: 0.25,
-          onComplete: () => {
-            hintEl.textContent = nextQuote;
-            gsap.to(hintEl, { opacity: 1, y: 0, duration: 0.45 });
-          },
-        });
-      }
-
       if (this.interactionClicks >= this.maxInteractionClicks) {
         this.endingInteracted = true;
         this.cleanupEndingInteraction();
+
+        // Final dot reveals the climactic quote
+        if (hintEl) {
+          hintEl.classList.remove('is-cooling-down');
+          gsap.to(hintEl, {
+            opacity: 0,
+            y: -4,
+            duration: 0.2,
+            onComplete: () => {
+              hintEl.textContent = quotes[4] || quotes[quotes.length - 1];
+              gsap.to(hintEl, { opacity: 1, y: 0, duration: 0.45 });
+            },
+          });
+        }
 
         // Allow final note & dot to resonate before transitioning to credits
         this.cooldownTimeout = setTimeout(() => {
@@ -537,10 +547,29 @@ export class Phase5Scene {
           }
         }, 2800);
       } else {
-        // Cooldown delay (2.5s) between each click so user takes time to listen to the song and absorb the thought
+        // Cooldown listening pause with glowing shimmer
+        if (hintEl) {
+          hintEl.textContent = 'Dengarkan alunannya sejenak...';
+          hintEl.classList.add('is-cooling-down');
+        }
+
+        // After cooldown (2.8s), reveal the poetic mood quote for this step and enable next touch
         this.cooldownTimeout = setTimeout(() => {
           this.isInteractionCoolingDown = false;
-        }, 2500);
+          if (hintEl && !this.endingInteracted) {
+            hintEl.classList.remove('is-cooling-down');
+            const currentQuote = quotes[dotIdx] || quotes[0];
+            gsap.to(hintEl, {
+              opacity: 0,
+              y: -4,
+              duration: 0.2,
+              onComplete: () => {
+                hintEl.textContent = currentQuote;
+                gsap.to(hintEl, { opacity: 1, y: 0, duration: 0.45 });
+              },
+            });
+          }
+        }, 2800);
       }
     };
 

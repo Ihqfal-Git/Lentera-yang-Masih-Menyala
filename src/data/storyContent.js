@@ -231,7 +231,6 @@ export const STORY_CONTENT = {
         vibeTitle: 'Cahaya Fajar & Percakapan Baru',
         songTrackName: "Maliq & D'Essentials — Senja Teduh Pelita",
         moodQuotes: [
-          'Membuka ruang untuk saling mendengar...',
           'Menyapa kembali hening yang sempat ada...',
           'Ada senyum yang tak pernah pudar...',
           'Setiap kata menemukan arah pulangnya...',
@@ -327,7 +326,6 @@ export const STORY_CONTENT = {
         vibeTitle: 'Temaram Rembulan & Ruang Hening',
         songTrackName: 'Nadin Amizah — Bunga Tidur',
         moodQuotes: [
-          'Membiarkan waktu merawat segalanya...',
           'Mengambil jeda untuk menata rasa...',
           'Tenanglah, biarkan malam memeluk sunyi...',
           'Waktu selalu tahu kapan harus menjawab...',
@@ -392,7 +390,6 @@ export const STORY_CONTENT = {
         vibeTitle: 'Senja Tenang & Keikhlasan',
         songTrackName: 'Lovarian — Perpisahan Termanis',
         moodQuotes: [
-          'Menerima akhir dengan penuh keikhlasan...',
           'Terima kasih untuk setiap tawa yang pernah ada...',
           'Merelakan bukan berarti melupakan...',
           'Kulepaskan genggaman dengan rasa syukur...',
