@@ -168,17 +168,15 @@ export class MosaicWall {
   }
 
   /**
-   * Open high-resolution detail spotlight for a photo
+   * Open high-resolution detail spotlight for a photo (Instant, 0 Animation Overhead)
    */
   openSpotlight(photo) {
     const modal = this.element.querySelector('#p2-spotlight-modal');
     const img = this.element.querySelector('#p2-spotlight-img');
     const title = this.element.querySelector('#p2-spotlight-title');
     const caption = this.element.querySelector('#p2-spotlight-caption');
-    const card = this.element.querySelector('#p2-spotlight-card');
-    const backdrop = this.element.querySelector('#p2-spotlight-backdrop');
 
-    if (!modal || !img || !title || !caption || !card) return;
+    if (!modal || !img || !title || !caption) return;
 
     this.activePhotoId = photo.id;
     img.src = photo.imageSrc;
@@ -187,52 +185,20 @@ export class MosaicWall {
 
     modal.classList.add('is-open');
     modal.setAttribute('aria-hidden', 'false');
-
-    gsap.killTweensOf([backdrop, card]);
-    gsap.fromTo(
-      backdrop,
-      { opacity: 0 },
-      { opacity: 1, duration: 0.22, ease: 'power1.out' }
-    );
-    gsap.fromTo(
-      card,
-      { opacity: 0, scale: 0.94, y: 12 },
-      { opacity: 1, scale: 1, y: 0, duration: 0.28, ease: 'power2.out' }
-    );
   }
 
   /**
-   * Close spotlight modal
+   * Close spotlight modal (Instant, 0 Animation Overhead)
    */
   closeSpotlight() {
     if (!this.element) return;
     const modal = this.element.querySelector('#p2-spotlight-modal');
-    const card = this.element.querySelector('#p2-spotlight-card');
-    const backdrop = this.element.querySelector('#p2-spotlight-backdrop');
-
-    if (!modal || !card || !backdrop) return;
+    if (!modal) return;
 
     audioManager.playPageTurn(0.18);
-
-    gsap.killTweensOf([backdrop, card]);
-    gsap.to(card, {
-      opacity: 0,
-      scale: 0.94,
-      y: 8,
-      duration: 0.18,
-      ease: 'power1.in',
-    });
-
-    gsap.to(backdrop, {
-      opacity: 0,
-      duration: 0.18,
-      ease: 'power1.in',
-      onComplete: () => {
-        modal.classList.remove('is-open');
-        modal.setAttribute('aria-hidden', 'true');
-        this.activePhotoId = null;
-      },
-    });
+    modal.classList.remove('is-open');
+    modal.setAttribute('aria-hidden', 'true');
+    this.activePhotoId = null;
   }
 
   /**
