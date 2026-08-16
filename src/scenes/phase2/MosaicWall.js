@@ -214,6 +214,14 @@ export class MosaicWall {
   reveal() {
     if (!this.element) return Promise.resolve();
 
+    if (this.container) {
+      this.container.classList.add('is-active');
+      this.container.style.visibility = 'visible';
+      this.container.style.opacity = '1';
+      this.container.style.pointerEvents = 'auto';
+      gsap.set(this.container, { opacity: 1, visibility: 'visible', pointerEvents: 'auto' });
+    }
+
     const header = this.element.querySelector('.mosaic-header');
     const items = this.element.querySelectorAll('.mosaic-polaroid-item');
     const footer = this.element.querySelector('.mosaic-footer');
@@ -275,6 +283,12 @@ export class MosaicWall {
     if (prefersReducedMotion) {
       this.element.style.visibility = 'hidden';
       this.element.style.pointerEvents = 'none';
+      if (this.container) {
+        this.container.classList.remove('is-active');
+        this.container.style.visibility = 'hidden';
+        this.container.style.opacity = '0';
+        this.container.style.pointerEvents = 'none';
+      }
       return Promise.resolve();
     }
 
@@ -288,6 +302,12 @@ export class MosaicWall {
         onComplete: () => {
           this.element.style.visibility = 'hidden';
           this.element.style.pointerEvents = 'none';
+          if (this.container) {
+            this.container.classList.remove('is-active');
+            this.container.style.visibility = 'hidden';
+            this.container.style.opacity = '0';
+            this.container.style.pointerEvents = 'none';
+          }
           resolve();
         },
       });

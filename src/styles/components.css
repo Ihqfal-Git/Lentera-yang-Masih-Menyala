@@ -739,6 +739,12 @@
   visibility: hidden;
 }
 
+.phase2-mosaic-stage.is-active {
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+}
+
 .mosaic-wall-container {
   position: absolute;
   inset: 0;
