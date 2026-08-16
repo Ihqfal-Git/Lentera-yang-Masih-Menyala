@@ -336,15 +336,15 @@ export class Phase5Scene {
       this.butterfly = data.butterfly;
       this.butterfly.setFastFlap();
       this.butterfly.flyCurvedPath([
-        { x: '50%', y: '16%', rotation: 0, duration: 2.0 },
+        { x: '50%', y: '9%', rotation: 0, duration: 2.0 },
       ]);
     } else {
       this.butterfly = new Butterfly({
         container: document.getElementById('globalActors') || this.stage,
       });
-      await this.butterfly.emergeFrom('108%', '15%');
+      await this.butterfly.emergeFrom('108%', '10%');
       await this.butterfly.flyCurvedPath([
-        { x: '50%', y: '16%', rotation: 0, duration: 2.2 },
+        { x: '50%', y: '9%', rotation: 0, duration: 2.2 },
       ]);
     }
     this.butterfly.setRestingFlap();
