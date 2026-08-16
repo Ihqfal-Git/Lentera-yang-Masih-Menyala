@@ -133,6 +133,65 @@ export class ChoiceSelector {
     }
   }
 
+  showConfirmModal(choiceKey) {
+    if (!this.modalOverlay) return;
+    this.pendingChoice = choiceKey;
+    const choiceData = STORY_CONTENT.phase5.choices[choiceKey];
+    if (!choiceData) return;
+
+    const modal = this.modalOverlay.querySelector('#p5-confirm-modal');
+    const badge = this.modalOverlay.querySelector('#p5-confirm-badge');
+    const question = this.modalOverlay.querySelector('#p5-confirm-question');
+    const explanation = this.modalOverlay.querySelector('#p5-confirm-explanation');
+
+    if (badge) badge.textContent = choiceData.confirmBadge;
+    if (question) question.textContent = choiceData.confirmQuestion;
+    if (explanation) explanation.textContent = choiceData.confirmExplanation;
+
+    this.modalOverlay.style.display = '';
+    this.modalOverlay.classList.add('is-active', 'is-open');
+    this.modalOverlay.style.visibility = 'visible';
+    this.modalOverlay.style.pointerEvents = 'auto';
+    this.modalOverlay.style.opacity = '1';
+
+    if (modal) {
+      gsap.killTweensOf(modal);
+      gsap.fromTo(
+        modal,
+        { scale: 0.94, opacity: 0, y: 12 },
+        { scale: 1, opacity: 1, y: 0, duration: 0.28, ease: 'power2.out' }
+      );
+    }
+  }
+
+  hideConfirmModal() {
+    if (!this.modalOverlay) return;
+    this.pendingChoice = null;
+    const modal = this.modalOverlay.querySelector('#p5-confirm-modal');
+
+    if (modal) {
+      gsap.killTweensOf(modal);
+      gsap.to(modal, {
+        scale: 0.94,
+        opacity: 0,
+        y: 8,
+        duration: 0.18,
+        ease: 'power1.in',
+        onComplete: () => {
+          this.modalOverlay.classList.remove('is-active', 'is-open');
+          this.modalOverlay.style.visibility = 'hidden';
+          this.modalOverlay.style.pointerEvents = 'none';
+          this.modalOverlay.style.opacity = '0';
+        },
+      });
+    } else {
+      this.modalOverlay.classList.remove('is-active', 'is-open');
+      this.modalOverlay.style.visibility = 'hidden';
+      this.modalOverlay.style.pointerEvents = 'none';
+      this.modalOverlay.style.opacity = '0';
+    }
+  }
+
   lockAndDismiss() {
     this.choiceLocked = true;
     if (this.modalOverlay) {
