@@ -195,8 +195,8 @@ export class MemoryCard {
       const originX = x !== null ? x : frameRect.width / 2;
       const originY = y !== null ? y : frameRect.height / 2;
 
-      // Spawn 3 cascading concentric wave rings
-      for (let i = 0; i < 3; i++) {
+      // Spawn 2 clean concentric wave rings
+      for (let i = 0; i < 2; i++) {
         const ripple = document.createElement('div');
         ripple.className = `memory-water-ripple ring-wave-${i + 1}`;
         ripple.style.cssText = `
@@ -208,20 +208,20 @@ export class MemoryCard {
           margin-left: -15px;
           margin-top: -15px;
           border-radius: 50%;
-          border: ${1.5 + i * 0.5}px solid rgba(255, 255, 255, 0.85);
+          border: 1.5px solid rgba(255, 255, 255, 0.85);
           background: radial-gradient(circle, rgba(242, 203, 134, 0.3) 0%, rgba(255, 255, 255, 0.1) 40%, transparent 70%);
-          box-shadow: 0 0 ${20 + i * 12}px rgba(242, 203, 134, 0.75), inset 0 0 15px rgba(255, 255, 255, 0.5);
+          box-shadow: 0 0 14px rgba(242, 203, 134, 0.65);
           pointer-events: none;
-          transform: scale(0.08);
-          opacity: 0.95;
+          transform: scale(0.1);
+          opacity: 0.9;
         `;
         ripplesContainer.appendChild(ripple);
 
         gsap.to(ripple, {
-          scale: 5.2 + i * 1.8,
+          scale: 4.8 + i * 1.5,
           opacity: 0,
-          duration: 1.2 + i * 0.25,
-          delay: i * 0.1,
+          duration: 0.85 + i * 0.15,
+          delay: i * 0.08,
           ease: 'power2.out',
           onComplete: () => {
             if (ripple.parentNode) {
