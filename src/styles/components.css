@@ -978,19 +978,15 @@
 .spotlight-backdrop {
   position: absolute;
   inset: 0;
-  background: rgba(8, 6, 14, 0.75);
-  backdrop-filter: blur(20px) saturate(160%);
-  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  background: rgba(8, 6, 14, 0.88);
   cursor: pointer;
 }
 
 .spotlight-card {
   position: relative;
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.12) 0%, rgba(18, 13, 28, 0.85) 100%);
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  backdrop-filter: blur(30px) saturate(190%);
-  -webkit-backdrop-filter: blur(30px) saturate(190%);
-  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.8), inset 0 1.5px 2px rgba(255, 255, 255, 0.45), 0 0 40px rgba(242, 203, 134, 0.25);
+  background: linear-gradient(145deg, #241c30 0%, #151020 100%);
+  border: 1px solid rgba(242, 203, 134, 0.35);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.85), 0 0 30px rgba(242, 203, 134, 0.2);
   border-radius: 22px;
   padding: var(--space-md);
   max-width: min(88vw, 360px);
@@ -999,6 +995,8 @@
   flex-direction: column;
   align-items: center;
   z-index: 2;
+  contain: paint layout;
+  transform: translateZ(0);
 }
 
 .spotlight-close-btn {
@@ -1096,18 +1094,6 @@
   .mosaic-proceed-btn {
     backdrop-filter: blur(8px) !important;
     -webkit-backdrop-filter: blur(8px) !important;
-  }
-
-  .spotlight-backdrop {
-    backdrop-filter: blur(8px) !important;
-    -webkit-backdrop-filter: blur(8px) !important;
-    background: rgba(8, 6, 14, 0.9) !important;
-  }
-
-  .spotlight-card {
-    backdrop-filter: blur(10px) !important;
-    -webkit-backdrop-filter: blur(10px) !important;
-    background: rgba(22, 16, 32, 0.96) !important;
   }
 
   .memory-photo-frame {
