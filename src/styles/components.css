@@ -843,11 +843,39 @@
   height: 100%;
   object-fit: cover;
   object-position: center 25%;
-  transition: transform 0.4s ease;
+  transition: transform 0.4s ease, filter 0.6s var(--ease-cinematic);
+  will-change: filter, transform;
 }
 
-.mosaic-polaroid-item:hover .mosaic-img {
+.mosaic-img.is-blurred {
+  filter: blur(14px) brightness(0.85);
+  transform: scale(1.08);
+}
+
+.mosaic-polaroid-item:hover .mosaic-img:not(.is-blurred) {
   transform: scale(1.06);
+}
+
+.mosaic-ripple-container {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mosaic-water-ripple {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.9);
+  background: radial-gradient(circle, rgba(242, 203, 134, 0.4) 0%, transparent 70%);
+  box-shadow: 0 0 15px rgba(242, 203, 134, 0.8), inset 0 0 10px rgba(255, 255, 255, 0.5);
+  pointer-events: none;
 }
 
 .mosaic-img-vignette {
@@ -855,6 +883,7 @@
   inset: 0;
   background: radial-gradient(circle at center, transparent 65%, rgba(0, 0, 0, 0.25) 100%);
   pointer-events: none;
+  z-index: 4;
 }
 
 .mosaic-label-wrap {

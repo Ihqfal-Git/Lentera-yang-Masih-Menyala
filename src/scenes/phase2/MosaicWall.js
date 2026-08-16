@@ -4,8 +4,12 @@ import { STORY_CONTENT } from '../../data/storyContent.js';
 
 /**
  * MosaicWall Component (Phase 2)
- * Renders all 12 Polaroid memory fragments simultaneously in a floating,
- * organic collage wall with interactive spotlight preview modal.
+ * Renders all 12 Polaroid memory fragments simultaneously:
+ * 1. Initial state: All photos in atmospheric blur
+ * 2. Clean aesthetic labels ("Fragmen I", "Fragmen II", etc.)
+ * 3. Tap to trigger dynamic water ripple, unblur polaroid, and open Spotlight Modal
+ * 4. Persistent unblurred state on mosaic grid
+ * 5. Smooth proceed button to transition to the Blooming Flower
  */
 export class MosaicWall {
   constructor(options = {}) {
@@ -15,6 +19,7 @@ export class MosaicWall {
     this.modal = null;
     this.timeline = null;
     this.photos = STORY_CONTENT.phase2.mosaic.photos || [];
+    this.clarifiedMap = new Set(); // Stores IDs of clarified photos
     this.activePhotoId = null;
   }
 
@@ -27,21 +32,21 @@ export class MosaicWall {
     el.id = 'p2-mosaic-wall';
     el.setAttribute('aria-label', content.title);
 
-    // Build Polaroid Items
+    // Build Polaroid Items (starts in blurred state)
     const itemsHTML = this.photos.map((item, idx) => {
-      // Natural organic tilt angles (-4deg to +4deg)
       const tilts = [-3.5, 2.5, -2, 3.8, -1.8, 2.8, -4, 1.5, -2.5, 3.2, -1.5, 2.2];
       const tilt = tilts[idx % tilts.length];
 
       return `
-        <button class="mosaic-polaroid-item item-${idx + 1}" type="button" data-id="${item.id}" aria-label="${item.title}" style="--item-tilt: ${tilt}deg;" tabindex="0">
+        <button class="mosaic-polaroid-item item-${idx + 1}" type="button" data-id="${item.id}" aria-label="${item.label}" style="--item-tilt: ${tilt}deg;" tabindex="0">
           <div class="mosaic-polaroid-inner">
             <div class="mosaic-img-wrap">
-              <img src="${item.imageSrc}" alt="${item.title}" class="mosaic-img" loading="lazy" />
+              <img src="${item.imageSrc}" alt="${item.label}" class="mosaic-img is-blurred" loading="lazy" />
+              <div class="mosaic-ripple-container" aria-hidden="true"></div>
               <div class="mosaic-img-vignette"></div>
             </div>
             <div class="mosaic-label-wrap">
-              <span class="mosaic-item-title">${item.title}</span>
+              <span class="mosaic-item-title">${item.label}</span>
             </div>
           </div>
         </button>
@@ -103,13 +108,13 @@ export class MosaicWall {
   bindEvents() {
     if (!this.element) return;
 
-    // 1. Polaroid Item Clicks (Open Spotlight)
+    // 1. Polaroid Item Clicks (Unblur & Open Spotlight)
     const items = this.element.querySelectorAll('.mosaic-polaroid-item');
     items.forEach((btn) => {
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
         const id = parseInt(btn.getAttribute('data-id'), 10);
-        this.openSpotlight(id);
+        this.clarifyAndOpen(btn, id, e);
       });
     });
 
@@ -137,14 +142,62 @@ export class MosaicWall {
   }
 
   /**
-   * Open high-resolution detail spotlight for a photo
+   * Unblur polaroid item with dynamic water ripple & open spotlight modal
    */
-  openSpotlight(photoId) {
+  clarifyAndOpen(buttonEl, photoId, event) {
     const photo = this.photos.find(p => p.id === photoId);
     if (!photo || !this.element) return;
 
-    audioManager.playWaterRipple(0.3);
+    // 1. Unblur the photo on the grid permanently
+    const img = buttonEl.querySelector('.mosaic-img');
+    const rippleWrap = buttonEl.querySelector('.mosaic-ripple-container');
 
+    if (!this.clarifiedMap.has(photoId)) {
+      this.clarifiedMap.add(photoId);
+      audioManager.playWaterRipple(0.38);
+
+      if (img) {
+        img.classList.remove('is-blurred');
+        gsap.to(img, {
+          filter: 'blur(0px) brightness(1)',
+          scale: 1.0,
+          duration: 0.7,
+          ease: 'power2.out',
+        });
+      }
+
+      // Spawn water ripple inside polaroid
+      if (rippleWrap) {
+        const ripple = document.createElement('div');
+        ripple.className = 'mosaic-water-ripple';
+        rippleWrap.appendChild(ripple);
+
+        gsap.fromTo(
+          ripple,
+          { scale: 0.1, opacity: 0.9 },
+          {
+            scale: 3.5,
+            opacity: 0,
+            duration: 0.9,
+            ease: 'power2.out',
+            onComplete: () => {
+              if (ripple.parentNode) ripple.parentNode.removeChild(ripple);
+            },
+          }
+        );
+      }
+    } else {
+      audioManager.playWaterRipple(0.25);
+    }
+
+    // 2. Open high-resolution detail spotlight
+    this.openSpotlight(photo);
+  }
+
+  /**
+   * Open high-resolution detail spotlight for a photo
+   */
+  openSpotlight(photo) {
     const modal = this.element.querySelector('#p2-spotlight-modal');
     const img = this.element.querySelector('#p2-spotlight-img');
     const title = this.element.querySelector('#p2-spotlight-title');
@@ -154,9 +207,9 @@ export class MosaicWall {
 
     if (!modal || !img || !title || !caption || !card) return;
 
-    this.activePhotoId = photoId;
+    this.activePhotoId = photo.id;
     img.src = photo.imageSrc;
-    title.textContent = photo.title;
+    title.textContent = photo.label;
     caption.textContent = `"${photo.caption}"`;
 
     modal.classList.add('is-open');
