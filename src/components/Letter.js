@@ -250,55 +250,53 @@ export class Letter {
     const openTl = gsap.timeline();
     this.activeTimelines.push(openTl);
 
-    // 1. Seal glows warmly & dissolves
-    openTl.to(sealGroup, { scale: 1.25, opacity: 0, duration: 0.6, ease: 'power2.in', svgOrigin: '140 94' }, 0);
+    // 1. Seal dissolves quickly
+    openTl.to(sealGroup, { scale: 1.15, opacity: 0, duration: 0.22, ease: 'power1.out', svgOrigin: '140 94' }, 0);
 
-    // 2. Top Flap flips open 180° along the top hinge
+    // 2. Top Flap slides & fades open effortlessly
     openTl.to(
       flapGroup,
       {
-        rotationX: -180,
+        scaleY: -0.1,
+        opacity: 0.25,
         svgOrigin: '140 0',
-        duration: 1.4,
-        ease: 'power2.inOut',
+        duration: 0.3,
+        ease: 'power2.out',
       },
-      0.15
+      0.04
     );
 
-    // 3. Inner Paper Card slides up smoothly from inside the envelope pocket
+    // 3. Inner Paper Card slides up smoothly into place
     openTl.fromTo(
       paper,
       {
-        y: 80,
-        scale: 0.88,
+        y: 35,
+        scale: 0.94,
         opacity: 0,
-        filter: 'blur(6px)',
         pointerEvents: 'none',
       },
       {
         y: 0,
         scale: 1.0,
         opacity: 1,
-        filter: 'blur(0px)',
-        duration: 1.6,
+        duration: 0.42,
         ease: 'power2.out',
         pointerEvents: 'auto',
       },
-      0.6
+      0.12
     );
 
-    // 4. Envelope Shell gently fades and sinks as paper ascends
+    // 4. Envelope Shell gently fades out
     openTl.to(
       shell,
       {
         opacity: 0,
-        y: 40,
-        scale: 0.94,
-        filter: 'blur(8px)',
-        duration: 1.0,
-        ease: 'power2.inOut',
+        y: 12,
+        scale: 0.96,
+        duration: 0.25,
+        ease: 'power1.out',
       },
-      1.1
+      0.15
     );
 
     await new Promise(resolve => openTl.eventCallback('onComplete', resolve));
