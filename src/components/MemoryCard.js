@@ -5,9 +5,10 @@ import { audioManager } from '../audio/audioManager.js';
  * MemoryCard Component
  * Displays partner memory photo with:
  * 1. Initial atmospheric blur state & hidden caption
- * 2. Tap anywhere on photo to trigger pure dynamic water ripple wave & unblur transition
- * 3. 3D depth deck-shuffling physics on swipe/click navigation
- * 4. Persistent clarification state across next/prev navigation
+ * 2. Pure ambient water ripple indicator (inviting touch like Phase 3)
+ * 3. Tap anywhere on photo to trigger dynamic water ripple wave & unblur transition
+ * 4. 3D depth deck-shuffling physics on swipe/click navigation
+ * 5. Persistent clarification state across next/prev navigation
  */
 export class MemoryCard {
   constructor(options = {}) {
@@ -74,8 +75,16 @@ export class MemoryCard {
             <!-- The Real Partner Photo (starts blurred until tapped) -->
             <img class="memory-img" src="${this.imageSrc}" alt="Potret dalam ingatan" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 25%; opacity: 0; filter: blur(16px) brightness(0.85); transform: scale(1.06); pointer-events: none; will-change: filter, transform, opacity;" loading="eager" />
             
-            <!-- Dynamic Water Ripples Container -->
-            <div class="memory-water-ripples-container" aria-hidden="true" style="position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 23;"></div>
+            <!-- Ambient Water Ripple Beacon (Pure Visual Touch Cue like Phase 3) -->
+            <div class="memory-ambient-ripple-beacon" aria-hidden="true" style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; z-index: 23;">
+              <div class="ambient-ripple-core"></div>
+              <div class="ambient-water-ring ring-1"></div>
+              <div class="ambient-water-ring ring-2"></div>
+              <div class="ambient-water-ring ring-3"></div>
+            </div>
+
+            <!-- Dynamic Tap Water Ripples Container -->
+            <div class="memory-water-ripples-container" aria-hidden="true" style="position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 24;"></div>
 
             <!-- Soft Atmospheric Frame Vignette -->
             <div class="memory-inner-vignette" style="position: absolute; inset: 0; background: radial-gradient(circle at center, transparent 60%, rgba(10, 8, 18, 0.45) 100%); pointer-events: none; z-index: 4;"></div>
@@ -159,12 +168,26 @@ export class MemoryCard {
     const photoFrame = this.element.querySelector('.memory-photo-frame');
     const img = this.element.querySelector('.memory-img');
     const captionWrapper = this.element.querySelector('.memory-caption-wrapper');
+    const ambientBeacon = this.element.querySelector('.memory-ambient-ripple-beacon');
     const ripplesContainer = this.element.querySelector('.memory-water-ripples-container');
 
     // 1. Play crystal water drop sound effect
     audioManager.playWaterRipple(0.38);
 
-    // 2. Spawn dynamic water ripple wave rings from tap coordinates
+    // 2. Fade out ambient ripple beacon
+    if (ambientBeacon) {
+      gsap.to(ambientBeacon, {
+        opacity: 0,
+        scale: 0.6,
+        duration: 0.45,
+        ease: 'power2.in',
+        onComplete: () => {
+          ambientBeacon.style.display = 'none';
+        },
+      });
+    }
+
+    // 3. Spawn dynamic water ripple wave rings from tap coordinates
     if (ripplesContainer && photoFrame) {
       const frameRect = photoFrame.getBoundingClientRect();
       const originX = x !== null ? x : frameRect.width / 2;
@@ -207,7 +230,7 @@ export class MemoryCard {
       }
     }
 
-    // 3. Smoothly clear photo blur & reset scale
+    // 4. Smoothly clear photo blur & reset scale
     if (img) {
       gsap.to(img, {
         filter: 'blur(0px) brightness(1)',
@@ -217,7 +240,7 @@ export class MemoryCard {
       });
     }
 
-    // 4. Reveal poetic caption
+    // 5. Reveal poetic caption
     if (captionWrapper) {
       captionWrapper.style.visibility = 'visible';
       captionWrapper.style.pointerEvents = 'auto';
@@ -228,7 +251,7 @@ export class MemoryCard {
       );
     }
 
-    // 5. Notify gallery that this card has been clarified
+    // 6. Notify gallery that this card has been clarified
     this.onClarified(this.index);
   }
 
@@ -238,7 +261,7 @@ export class MemoryCard {
   pulseClarifyCue() {
     if (!this.element || this.isClarified) return;
     const photoFrame = this.element.querySelector('.memory-photo-frame');
-    const ripplesContainer = this.element.querySelector('.memory-water-ripples-container');
+    const ambientCore = this.element.querySelector('.ambient-ripple-core');
 
     if (photoFrame) {
       // Gentle card wobble
@@ -256,39 +279,20 @@ export class MemoryCard {
           },
         }
       );
+    }
 
-      // Subtle center water ripple pulse
-      if (ripplesContainer) {
-        const frameRect = photoFrame.getBoundingClientRect();
-        const ripple = document.createElement('div');
-        ripple.className = 'memory-water-ripple ring-cue';
-        ripple.style.cssText = `
-          position: absolute;
-          left: ${frameRect.width / 2}px;
-          top: ${frameRect.height / 2}px;
-          width: 30px;
-          height: 30px;
-          margin-left: -15px;
-          margin-top: -15px;
-          border-radius: 50%;
-          border: 1.5px solid rgba(242, 203, 134, 0.7);
-          box-shadow: 0 0 20px rgba(242, 203, 134, 0.5);
-          pointer-events: none;
-          transform: scale(0.1);
-          opacity: 0.85;
-        `;
-        ripplesContainer.appendChild(ripple);
-
-        gsap.to(ripple, {
-          scale: 3.5,
-          opacity: 0,
-          duration: 1.0,
-          ease: 'power2.out',
-          onComplete: () => {
-            if (ripple.parentNode) ripple.parentNode.removeChild(ripple);
-          },
-        });
-      }
+    if (ambientCore) {
+      gsap.fromTo(
+        ambientCore,
+        { scale: 1 },
+        {
+          scale: 2.2,
+          duration: 0.25,
+          yoyo: true,
+          repeat: 3,
+          ease: 'power2.inOut',
+        }
+      );
     }
   }
 
@@ -299,6 +303,7 @@ export class MemoryCard {
     if (!this.element) return;
     const img = this.element.querySelector('.memory-img');
     const captionWrapper = this.element.querySelector('.memory-caption-wrapper');
+    const ambientBeacon = this.element.querySelector('.memory-ambient-ripple-beacon');
     const photoFrame = this.element.querySelector('.memory-photo-frame');
 
     if (photoFrame) {
@@ -309,6 +314,10 @@ export class MemoryCard {
       if (img) {
         gsap.set(img, { filter: 'blur(0px) brightness(1)', scale: 1.0, opacity: 1 });
       }
+      if (ambientBeacon) {
+        ambientBeacon.style.display = 'none';
+        ambientBeacon.style.opacity = '0';
+      }
       if (captionWrapper) {
         captionWrapper.style.visibility = 'visible';
         captionWrapper.style.pointerEvents = 'auto';
@@ -317,6 +326,11 @@ export class MemoryCard {
     } else {
       if (img) {
         gsap.set(img, { filter: 'blur(16px) brightness(0.85)', scale: 1.06, opacity: 1 });
+      }
+      if (ambientBeacon) {
+        ambientBeacon.style.display = 'flex';
+        ambientBeacon.style.opacity = '1';
+        gsap.set(ambientBeacon, { opacity: 1, scale: 1 });
       }
       if (captionWrapper) {
         captionWrapper.style.visibility = 'hidden';
