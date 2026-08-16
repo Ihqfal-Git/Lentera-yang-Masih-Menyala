@@ -73,7 +73,7 @@ export class MemoryCard {
             </div>
 
             <!-- The Real Partner Photo (starts blurred until tapped) -->
-            <img class="memory-img" src="${this.imageSrc}" alt="Potret dalam ingatan" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 25%; opacity: 0; filter: blur(16px) brightness(0.85); transform: scale(1.06); pointer-events: none; will-change: filter, transform, opacity;" loading="eager" />
+            <img class="memory-img" src="${this.imageSrc}" alt="Potret dalam ingatan" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 25%; opacity: 0; filter: blur(14px) brightness(0.85); transform: scale(1.04) translateZ(0); pointer-events: none;" loading="${this.index === 0 ? 'eager' : 'lazy'}" decoding="async" />
             
             <!-- Ambient Water Ripple Beacon (Pure Visual Touch Cue like Phase 3, ONLY on Photo 1) -->
             ${this.index === 0 ? `

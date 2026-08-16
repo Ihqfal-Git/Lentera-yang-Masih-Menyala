@@ -1067,6 +1067,63 @@
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
 }
 
+/* =========================================================
+   High-Performance Mobile Optimizations (Phase 2 Photos & Grid)
+   Eliminates heavy multi-pass backdrop-filters & optimizes blurs
+   ========================================================= */
+@media (max-width: 768px) {
+  .mosaic-wall-container {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: radial-gradient(circle at 50% 20%, rgba(26, 18, 40, 0.97) 0%, rgba(8, 6, 14, 0.98) 100%) !important;
+  }
+
+  .mosaic-polaroid-item {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: #faf6f0 !important;
+    contain: paint layout !important;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4) !important;
+  }
+
+  .mosaic-img.is-blurred {
+    filter: blur(5px) brightness(0.9) !important;
+    transform: scale(1.03) !important;
+  }
+
+  .mosaic-proceed-btn {
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+  }
+
+  .spotlight-backdrop {
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+    background: rgba(8, 6, 14, 0.9) !important;
+  }
+
+  .spotlight-card {
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    background: rgba(22, 16, 32, 0.96) !important;
+  }
+
+  .memory-photo-frame {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  .memory-img {
+    filter: blur(6px) brightness(0.9) !important;
+    transform: scale(1.03) translateZ(0) !important;
+  }
+
+  .memory-peeking-glow {
+    filter: none !important;
+    box-shadow: 0 0 16px rgba(242, 203, 134, 0.3) !important;
+  }
+}
+
 /* Interactive Flower Section */
 .interactive-environment {
   position: relative;

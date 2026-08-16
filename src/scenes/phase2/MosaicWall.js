@@ -41,7 +41,7 @@ export class MosaicWall {
         <button class="mosaic-polaroid-item item-${idx + 1}" type="button" data-id="${item.id}" aria-label="${item.label}" style="--item-tilt: ${tilt}deg;" tabindex="0">
           <div class="mosaic-polaroid-inner">
             <div class="mosaic-img-wrap">
-              <img src="${item.imageSrc}" alt="${item.label}" class="mosaic-img is-blurred" loading="lazy" />
+              <img src="${item.imageSrc}" alt="${item.label}" class="mosaic-img is-blurred" loading="lazy" decoding="async" />
               <div class="mosaic-ripple-container" aria-hidden="true"></div>
               <div class="mosaic-img-vignette"></div>
             </div>
