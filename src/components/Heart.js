@@ -209,6 +209,10 @@ export class Heart {
       transform-origin: center center;
     `;
 
+    if (container.children.length >= 2 && container.firstChild) {
+      container.removeChild(container.firstChild);
+    }
+
     container.appendChild(ring);
 
     // Radiate outward & fade smoothly

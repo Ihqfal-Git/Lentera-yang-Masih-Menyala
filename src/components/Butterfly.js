@@ -242,9 +242,12 @@ export class Butterfly {
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (prefersReducedMotion) return;
 
+    const isMobile = window.innerWidth <= 768;
+    const intervalMs = isMobile ? 80 : 60;
+
     this.glitterInterval = setInterval(() => {
       this.emitGlitter();
-    }, 45);
+    }, intervalMs);
   }
 
   stopGlitterTrail() {
@@ -257,19 +260,19 @@ export class Butterfly {
   emitGlitter() {
     if (!this.element || !this.element.parentNode || !this.container) return;
 
-    const rect = this.element.getBoundingClientRect();
-    if (rect.width === 0 || rect.height === 0) return;
+    // Limit max active particles in DOM to prevent GPU memory pressure
+    if (this.glitterParticles.length >= 8) return;
 
-    const parentRect = this.container.getBoundingClientRect();
-    const x = rect.left - parentRect.left + rect.width / 2 + (Math.random() - 0.5) * 14;
-    const y = rect.top - parentRect.top + rect.height / 2 + (Math.random() - 0.5) * 10;
+    // Use fast offset values instead of forced layout recalculation
+    const x = this.element.offsetLeft + (Math.random() - 0.5) * 14;
+    const y = this.element.offsetTop + (Math.random() - 0.5) * 10;
 
     const particle = document.createElement('div');
     particle.className = 'butterfly-glitter-particle';
 
-    const colors = ['#ffffff', '#fff8e7', '#f2cb86', '#ffd580', '#f7a988', '#ffeedd'];
+    const colors = ['#ffffff', '#fff8e7', '#f2cb86', '#ffd580', '#f7a988'];
     const color = colors[Math.floor(Math.random() * colors.length)];
-    const size = 2.5 + Math.random() * 3.5;
+    const size = 2.5 + Math.random() * 2.5;
 
     particle.style.cssText = `
       position: absolute;
@@ -279,7 +282,7 @@ export class Butterfly {
       height: ${size}px;
       background: ${color};
       border-radius: 50%;
-      box-shadow: 0 0 ${size * 2.5}px ${color}, 0 0 ${size * 5}px rgba(242, 203, 134, 0.85);
+      box-shadow: 0 0 8px ${color};
       pointer-events: none;
       z-index: 34;
       opacity: 0.95;
@@ -289,14 +292,14 @@ export class Butterfly {
     this.container.appendChild(particle);
     this.glitterParticles.push(particle);
 
-    const driftX = (Math.random() - 0.5) * 28;
-    const driftY = 10 + Math.random() * 26;
-    const duration = 0.85 + Math.random() * 0.6;
+    const driftX = (Math.random() - 0.5) * 22;
+    const driftY = 8 + Math.random() * 20;
+    const duration = 0.75 + Math.random() * 0.45;
 
     gsap.to(particle, {
       x: `+=${driftX}`,
       y: `+=${driftY}`,
-      scale: 0.15,
+      scale: 0.2,
       opacity: 0,
       duration: duration,
       ease: 'power1.out',
